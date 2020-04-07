@@ -22,10 +22,10 @@
     
     <item>
       <title>Authenticating Spring Boot apps on AKS with MSI</title>
-      <link>https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</link>
+      <link>https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/</link>
       <pubDate>Sun, 05 Apr 2020 14:06:17 +0200</pubDate>
       
-      <guid>https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</guid>
+      <guid>https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/</guid>
       <description>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
 Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</description>
     </item>

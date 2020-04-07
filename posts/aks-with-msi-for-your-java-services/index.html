@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Aris van Ommeren">
+    <meta name="description" content="My personal website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Authenticating Spring Boot apps on AKS with MSI"/>
+<meta name="twitter:description" content="Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
+Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:"/>
+
+    <meta property="og:title" content="Authenticating Spring Boot apps on AKS with MSI" />
+<meta property="og:description" content="Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
+Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/" />
+<meta property="article:published_time" content="2020-04-05T14:06:17+02:00" />
+<meta property="article:modified_time" content="2020-04-05T14:06:17+02:00" />
+
+
+    
+      <base href="https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/">
+    
+    <title>
+  Authenticating Spring Boot apps on AKS with MSI · aristosvo.github.io
+</title>
+
+    
+      <link rel="canonical" href="https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://aristosvo.github.io/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css" integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="https://aristosvo.github.io/css/custom.css" />
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.68.3" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://aristosvo.github.io/">
+      aristosvo.github.io
+    </a>
+    
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://aristosvo.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://aristosvo.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Authenticating Spring Boot apps on AKS with MSI</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-04-05T14:06:17&#43;02:00'>
+                April 5, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <p>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.</p>
+<h1 id="managed-service-identities-a-short-intro">Managed Service Identities: a short intro</h1>
+<p>To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</p>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview">Managed Identities for Azure explained</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/aks/use-managed-identity">Managed Identities for Azure Kubernetes</a></li>
+</ul>
+<p>The point of <strong>Managed Service Identities</strong> or also called <strong>system-assigned Managed Identities</strong> is to provide you with an identity which is bound to the service. This means that the Managed Service Identity can be assigned permissions, but that after removal of the service, the Managed Service Identity and its permissions are also gone. I&rsquo;m only gonna show you AKS and its <strong>Managed Service Identity</strong> functionality in action, from now on called: MSI.</p>
+<p>Besides the Managed Service Identities we will also use <strong>user-assigned Managed Identities</strong>. This is also an Azure Managed Identity, created in Azure AD, but not assigned at creation time to a specific service and is a standalone Azure resource. One of these is assigned to our AKS Virtual Machine Scale Set and another one is used as the identity for our pod.</p>
+<h1 id="the-outline">The outline</h1>
+<p>I&rsquo;ll show you how to create a simple Spring Boot sample application in AKS. This app is build with Maven, containerized with Jib and finaly connecting with to the Azure resources with MSI credentials.</p>
+<p>The list of required steps:</p>
+<ol>
+<li>Create an <strong>Azure Kubernetes Service cluster with MSI</strong> enabled</li>
+<li>Create an <strong>Azure Container Registry</strong> for your containers</li>
+<li>Create an <strong>Azure Key Vault</strong> to contain your secrets</li>
+<li>Create an <strong>Azure Storage Account</strong> tot contain your files</li>
+<li>Connect your Azure Container Registry with AKS</li>
+<li>Create an <strong>Managed Identity</strong> for your pod</li>
+<li>Install <strong>aad-pod-identity</strong> on your AKS cluster</li>
+<li>Provide permissions for your AKS MSI to manage your Azure Managed Identity</li>
+<li>Bind the Azure Identity to your pod with aad-pod-identity configuration</li>
+<li>Create an Spring Boot application and build it, push a container to your registry</li>
+<li>Test it!</li>
+</ol>
+<h1 id="lets-go">Let&rsquo;s go!</h1>
+<h2 id="tools">Tools:</h2>
+<p>The tools necessary to do this on your own. I&rsquo;m working on Ubuntu, so all examples are based on that:</p>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt?view=azure-cli-latest">Azure CLI for bash</a></li>
+<li><a href="https://docs.azul.com/zulu/zuludocs/ZuluUserGuide/InstallingZulu/InstallZulu.htm">Zulu JDK</a></li>
+<li><a href="https://linuxize.com/post/how-to-install-apache-maven-on-ubuntu-18-04/">Maven</a></li>
+<li><a href="https://github.com/Azure/acr-docker-credential-helper#installation">docker-credential-acr-linux</a></li>
+</ul>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># install az cli latest version</span>
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+<span style="font-style:italic"># install azul JDK and mvn 3.6.x</span>
+sudo apt-get install zulu-11 -y
+sudo apt install maven -y
+mvn -version
+
+<span style="font-style:italic"># install docker credential helper for acr/linux</span>
+curl -L https://aka.ms/acr/installaad/bash | /bin/bash
+</code></pre></div><h2 id="step-1-aks">Step 1: AKS</h2>
+<p>First step along the way is to create an AKS environment which facilitates this. First of all, create AKS with MSI enabled. This is a recent feature for AKS:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az login
+
+export CLUSTERNAME=testmsi
+export RESOURCE_GROUP=aks-rg
+export SUBS=&lt;your subscription id&gt;
+az resource create -n $RESOURCE_GROUP
+az aks create -g $RESOURCE_GROUP -n $CLUSTERNAME --enable-managed-identity
+</code></pre></div><h2 id="step-2-key-vault">Step 2: Key Vault</h2>
+<p>In the meanwhile, waiting for the cluster is not necessary. Let&rsquo;s open up another shell and start creating the other components necessary for this experiment:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export CLUSTERNAME=testmsi
+export RESOURCE_GROUP=aks-rg
+export SUBS=&lt;your subscription id&gt;
+
+<span style="font-style:italic"># create an Azure Key Vault with a few secrets</span>
+az keyvault create -n $CLUSTERNAME -g $RESOURCE_GROUP
+az keyvault secret set --name your-property-name <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --vault-name $CLUSTERNAME --value youdidit135
+
+</code></pre></div><h2 id="step-3-container-registry">Step 3: Container Registry</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create an Azure Container Registry</span>
+az acr create -n $CLUSTERNAME -g $RESOURCE_GROUP --sku Basic
+
+</code></pre></div><h2 id="step-4-storage">Step 4: Storage</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create Blob Storage in an Azure Storage Account</span>
+az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
+az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> --auth-mode login
+cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; blobs.txt
+</span><span style="font-style:italic">This is your test file
+</span><span style="font-style:italic">EOT</span>
+az storage blob upload -f ./blobs.txt -c <span style="font-style:italic">&#34;blobs&#34;</span> -n <span style="font-style:italic">&#34;blobs.txt&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span>
+
+export STORAGE_URI=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;primaryEndpoints.blob&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+</code></pre></div><h2 id="step-5-connect-aks-to-your-container-registry">Step 5: Connect AKS to your container registry</h2>
+<p>Wow, that was a lot to take in already. Let&rsquo;s check first if AKS is already there. If not, take a small break and drink some water. Stay hydrated!)</p>
+<p>If AKS is provisioned for you, we want to connect your Azure Container Registry to your AKS instance:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az aks update -n $CLUSTERNAME -g $RESOURCE_GROUP --attach-acr $CLUSTERNAME
+</code></pre></div><h2 id="step-6-create-an-identity-for-our-pod">Step 6: Create an identity for our pod</h2>
+<p>The pod will use an user-assiged Managed Identity. This identity is not bound to a service, but is visible within your resource group.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># make an identity for our pods</span>
+export POD_IDENTITY_NAME=demo-aad1
+export PRINCIPAL_ID=<span style="font-weight:bold">$(</span>az identity create -n $POD_IDENTITY_NAME <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  -g $NODE_RESOURCE_GROUP --query <span style="font-style:italic">&#39;principalId&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+</code></pre></div><p>Our identity to use by the pod is created, but what about it&rsquo;s permissions? And how to connect it to the actual pod?
+We add permissions to access the Key Vault and to read our blob storage:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow access to the key vault secrets for our pod identity</span>
+az role assignment create --role Reader --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+az keyvault set-policy -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="font-weight:bold;font-style:italic">\ </span>
+  --object-id $PRINCIPAL_ID --secret-permissions get list
+
+export STORAGE_ID=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;id&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+
+az role assignment create --role <span style="font-style:italic">&#34;Storage Blob Data Reader&#34;</span> --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --scope $STORAGE_ID
+</code></pre></div><h2 id="step-7-prepare-our-aks-cluster-with-aad-pod-identity">Step 7: Prepare our AKS cluster with aad-pod-identity</h2>
+<p>We are ready to deploy <code>aad-pod-identity</code>. It might seem simple from your point of view, but figuring it out took me a short while. We want to use our MSI within the cluster to do some magic for our pods. To make this happen, we need pod identities. With a few simple commands we make this magic happen:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># deploy aad-pod-identity</span>
+az aks get-credentials -g $RESOURCE_GROUP -n $CLUSTERNAME
+kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment-rbac.yaml
+NODE_RESOURCE_GROUP=<span style="font-weight:bold">$(</span>az aks show -g $RESOURCE_GROUP -n $CLUSTERNAME <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --query nodeResourceGroup -o tsv<span style="font-weight:bold">)</span>
+</code></pre></div><h2 id="step-8-extend-the-permissions-for-our-kubelet-identity">Step 8: Extend the permissions for our kubelet identity</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow our kubelet identity to manage the identities</span>
+az role assignment create --role <span style="font-style:italic">&#34;Virtual Machine Contributor&#34;</span> <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+az role assignment create --role <span style="font-style:italic">&#34;Managed Identity Operator&#34;</span> <span style="font-weight:bold;font-style:italic">\ </span>
+  --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+</code></pre></div><h2 id="step-9-configure-your-cluster-to-use-the-identity-for-your-pod">Step 9: Configure your cluster to use the Identity for your pod</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># find values for our AKS pod identity configuration:</span>
+CLIENT_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .clientId<span style="font-weight:bold">)</span>
+RESOURCE_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .id<span style="font-weight:bold">)</span>
+echo <span style="font-style:italic">&#34;Pod Identity name = </span><span style="font-weight:bold;font-style:italic">${</span>POD_IDENTITY_NAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+echo <span style="font-style:italic">&#34;Client id = </span><span style="font-weight:bold;font-style:italic">${</span>CLIENT_ID<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+echo <span style="font-style:italic">&#34;Resource id = </span><span style="font-weight:bold;font-style:italic">${</span>RESOURCE_ID<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+
+<span style="font-style:italic"># apply pod identity configuration to AKS</span>
+cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentity.yml
+</span><span style="font-style:italic">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
+</span><span style="font-style:italic">kind: AzureIdentity
+</span><span style="font-style:italic">metadata:
+</span><span style="font-style:italic">  name: $POD_IDENTITY_NAME
+</span><span style="font-style:italic">spec:
+</span><span style="font-style:italic">  type: 0 # Azure ID (1 is SP)
+</span><span style="font-style:italic">  ResourceID: $RESOURCE_ID
+</span><span style="font-style:italic">  ClientID: $CLIENT_ID
+</span><span style="font-style:italic">EOT</span>
+kubectl apply -f azureidentity.yml
+
+<span style="font-style:italic"># bind the pod identity to pods with label `aadpodidbinding: demo`:</span>
+cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentitybinding.yml
+</span><span style="font-style:italic">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
+</span><span style="font-style:italic">kind: AzureIdentityBinding
+</span><span style="font-style:italic">metadata:
+</span><span style="font-style:italic">  name: $POD_IDENTITY_NAME-binding
+</span><span style="font-style:italic">spec: 
+</span><span style="font-style:italic">  AzureIdentity: $POD_IDENTITY_NAME
+</span><span style="font-style:italic">  Selector: &#34;demo&#34;
+</span><span style="font-style:italic">EOT</span>
+kubectl apply -f azureidentitybinding.yml
+</code></pre></div><h2 id="step-10-create-an-application-and-build-it-push-a-container-to-your-registry">Step 10: Create an application and build it, push a container to your registry</h2>
+<p>We&rsquo;ve done a lot already, but we still lack an application which reads the secrets from the Azure Key Vault. Therefore, we use an application which only reads the secret and writes it to the logs. <strong>Don&rsquo;t do that in production:)</strong>&rsquo;</p>
+<p>The Spring Boot application to use can be found <a href="https://github.com/aristosvo/azure-keyvault-secrets-spring-boot">here</a>. When we build this application, Jib takes care of pushing an image to your container registry directly. So, let&rsquo;s do it!</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># clone the application</span>
+git clone https://github.com/aristosvo/azure-keyvault-secrets-spring-boot.git
+
+<span style="font-style:italic"># login to your Azure Container Registry</span>
+az acr login -n $CLUSTERNAME
+
+<span style="font-style:italic"># build the application and push it with Jib to your container registry</span>
+cd ./azure-keyvault-secrets-spring-boot
+mvn clean install
+</code></pre></div><h2 id="step-11-last-but-not-least-deploy-and-see-the-magic-happen">Step 11: Last but not least, deploy and see the magic happen!</h2>
+<p>We are almost there. Only 2 things left:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># deploying the application</span>
+kubectl apply -f application.yml
+
+<span style="font-style:italic"># check the logs!</span>
+kubectl log -l app=spring-boot-demo | grep <span style="font-style:italic">&#34;yourSecretPropertyName&#34;</span>
+</code></pre></div><p>The result should contain a message that your secret property had value &lsquo;youdidit135&rsquo; and that one blob is found, &lsquo;blobs&rsquo;.</p>
+<p>Have a nice day!</p>
+<p><a href="https://github.com/aristosvo">aristosvo</a></p>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "aristosvo-github-io" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js" id="MathJax-script"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p>Knowledge as a Service</p>
+      
+      
+        ©
+        
+        2020
+         Aris van Ommeren 
+      
+      
+      
+    </section>
+  </footer>
+
+    </main>
+
+    
+
+    
+
+  </body>
+
+</html>
