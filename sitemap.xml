@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://aristosvo.github.io/about/</loc>
+    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://aristosvo.github.io/</loc>
+    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</loc>
+    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://aristosvo.github.io/posts/</loc>
+    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://aristosvo.github.io/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>http://aristosvo.github.io/tags/</loc>
+  </url>
+  
+</urlset>

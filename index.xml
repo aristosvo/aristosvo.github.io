@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>aristosvo.github.io</title>
+    <link>http://aristosvo.github.io/</link>
+    <description>Recent content on aristosvo.github.io</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Apr 2020 14:06:17 +0200</lastBuildDate>
+    
+	<atom:link href="http://aristosvo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>http://aristosvo.github.io/about/</link>
+      <pubDate>Sun, 05 Apr 2020 14:06:17 +0200</pubDate>
+      
+      <guid>http://aristosvo.github.io/about/</guid>
+      <description>It is a well known fact that everybody has somebody to share.
+This is my blog: let&amp;rsquo;s try to share some stuff!</description>
+    </item>
+    
+    <item>
+      <title>Authenticating Spring Boot apps on AKS with MSI</title>
+      <link>http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</link>
+      <pubDate>Sun, 05 Apr 2020 14:06:17 +0200</pubDate>
+      
+      <guid>http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</guid>
+      <description>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
+Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</description>
+    </item>
+    
+  </channel>
+</rss>
