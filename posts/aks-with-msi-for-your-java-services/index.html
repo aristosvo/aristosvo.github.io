@@ -270,9 +270,9 @@ cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentitybinding.ym
 kubectl apply -f azureidentitybinding.yml
 </code></pre></div><h2 id="step-10-create-an-application-and-build-it-push-a-container-to-your-registry">Step 10: Create an application and build it, push a container to your registry</h2>
 <p>We&rsquo;ve done a lot already, but we still lack an application which reads the secrets from the Azure Key Vault. Therefore, we use an application which only reads the secret and writes it to the logs. <strong>Don&rsquo;t do that in production:)</strong>&rsquo;</p>
-<p>The Spring Boot application to use can be found <a href="https://github.com/aristosvo/azure-keyvault-secrets-spring-boot">here</a>. When we build this application, Jib takes care of pushing an image to your container registry directly. So, let&rsquo;s do it!</p>
+<p>The Spring Boot application to use can be found <a href="https://github.com/aristosvo/azure-msi-spring-boot">here</a>. When we build this application, Jib takes care of pushing an image to your container registry directly. So, let&rsquo;s do it!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># clone the application</span>
-git clone https://github.com/aristosvo/azure-keyvault-secrets-spring-boot.git
+git clone https://github.com/aristosvo/azure-msi-spring-boot.git
 
 <span style="font-style:italic"># login to your Azure Container Registry</span>
 az acr login -n $CLUSTERNAME
@@ -287,7 +287,7 @@ cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; deployment.yml
 </span><span style="font-style:italic">apiVersion: extensions/v1beta1
 </span><span style="font-style:italic">kind: Deployment
 </span><span style="font-style:italic">metadata:
-</span><span style="font-style:italic">  name: spring-boot-demo-keyvault
+</span><span style="font-style:italic">  name: spring-boot-demo-msi
 </span><span style="font-style:italic">spec:
 </span><span style="font-style:italic">  replicas: 1
 </span><span style="font-style:italic">  minReadySeconds: 5
@@ -306,7 +306,7 @@ cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; deployment.yml
 </span><span style="font-style:italic">      containers:
 </span><span style="font-style:italic">      - name: spring-boot-container
 </span><span style="font-style:italic">        imagePullPolicy: Always
-</span><span style="font-style:italic">        image: $CLUSTERNAME.azurecr.io/azure-keyvault-secrets-spring-boot:example
+</span><span style="font-style:italic">        image: $CLUSTERNAME.azurecr.io/azure-msi-spring-boot:example
 </span><span style="font-style:italic">        env:
 </span><span style="font-style:italic">          - name: KEYVAULT_URI
 </span><span style="font-style:italic">            value: &#34;https://$CLUSTERNAME.vault.azure.net&#34;
