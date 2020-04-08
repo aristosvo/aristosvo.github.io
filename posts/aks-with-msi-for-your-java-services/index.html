@@ -174,7 +174,7 @@ mvn -version
 
 <span style="font-style:italic"># install docker credential helper for acr/linux</span>
 curl -L https://aka.ms/acr/installaad/bash | /bin/bash
-</code></pre></div><h2 id="step-1-aks">Step 1: AKS</h2>
+</code></pre></div><h2 id="step-1-fire-up-aks">Step 1: Fire up AKS</h2>
 <p>First step along the way is to create an AKS environment which facilitates this. First of all, create AKS with MSI enabled. This is a recent feature for AKS:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az login
 
@@ -183,7 +183,7 @@ export RESOURCE_GROUP=aks-rg
 export SUBS=&lt;your subscription id&gt;
 az resource create -n $RESOURCE_GROUP
 az aks create -g $RESOURCE_GROUP -n $CLUSTERNAME --enable-managed-identity
-</code></pre></div><h2 id="step-2-key-vault">Step 2: Key Vault</h2>
+</code></pre></div><h2 id="step-2-create-a-key-vault">Step 2: Create a Key Vault</h2>
 <p>In the meanwhile, waiting for the cluster is not necessary. Let&rsquo;s open up another shell and start creating the other components necessary for this experiment:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export CLUSTERNAME=testmsi
 export RESOURCE_GROUP=aks-rg
@@ -194,11 +194,11 @@ az keyvault create -n $CLUSTERNAME -g $RESOURCE_GROUP
 az keyvault secret set --name your-property-name <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --vault-name $CLUSTERNAME --value youdidit135
 
-</code></pre></div><h2 id="step-3-container-registry">Step 3: Container Registry</h2>
+</code></pre></div><h2 id="step-3-add-a-container-registry">Step 3: Add a Container Registry</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create an Azure Container Registry</span>
 az acr create -n $CLUSTERNAME -g $RESOURCE_GROUP --sku Basic
 
-</code></pre></div><h2 id="step-4-storage">Step 4: Storage</h2>
+</code></pre></div><h2 id="step-4-prepare-some-storage">Step 4: Prepare some Storage</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create Blob Storage in an Azure Storage Account</span>
 az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
 az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> --auth-mode login
