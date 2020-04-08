@@ -11,10 +11,10 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Authenticating Spring Boot apps on AKS with MSI"/>
-<meta name="twitter:description" content="Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example."/>
+<meta name="twitter:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault."/>
 
     <meta property="og:title" content="Authenticating Spring Boot apps on AKS with MSI" />
-<meta property="og:description" content="Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example." />
+<meta property="og:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/" />
 <meta property="article:published_time" content="2020-04-05T14:06:17+02:00" />
@@ -119,7 +119,15 @@
 
       <div>
         
-        <p>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example.</p>
+        
+<aside class="admonition note">
+	<div class="note-icon">
+		
+	</div>
+	
+	<div class="admonition-content"><strong>Terraform:</strong> This <a href="https://github.com/terraform-providers/terraform-provider-azurerm/issues/">issue</a> is filed to add the last essential parts in the <a href="https://github.com/terraform-providers/terraform-provider-azurerm">Azure TerraForm provider</a> and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.</div>
+</aside>
+<p>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example.</p>
 <p>One of the resources which helped me the most was <a href="https://csa-ocp-ger.github.io/unicorn/challenges.aadpodidentity.html,">https://csa-ocp-ger.github.io/unicorn/challenges.aadpodidentity.html,</a> which provides you with more in depth knowledge on <strong>aad-pod-identity</strong> and <strong>Managed Service Identities</strong>. It showed my an overview and a quick starter for an .NET application.</p>
 <p>The focus of this blog is on Spring Boot applications and how it works for them. I&rsquo;ll try to fill the gap for Azure Kubernetes Service combined with Spring Boot applications + the new MSI feature for AKS. The Spring Boot application as demoed can in the end access Azure resources without a password or token as Kubernetes Secrets. Super Awesome!!</p>
 <h1 id="managed-service-identities-a-short-intro">Managed Service Identities: a short intro</h1>
