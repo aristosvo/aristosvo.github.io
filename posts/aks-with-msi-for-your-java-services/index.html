@@ -11,10 +11,10 @@
 
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Authenticating Spring Boot apps on AKS with MSI"/>
-<meta name="twitter:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault."/>
+<meta name="twitter:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking into solutions how to authenticate a few pods on Azure Kubernetes Service to other Azure services. These pods contain applications build with Spring Boot and my first idea was to only connect to Azure KeyVault."/>
 
     <meta property="og:title" content="Authenticating Spring Boot apps on AKS with MSI" />
-<meta property="og:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault." />
+<meta property="og:description" content="Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking into solutions how to authenticate a few pods on Azure Kubernetes Service to other Azure services. These pods contain applications build with Spring Boot and my first idea was to only connect to Azure KeyVault." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/" />
 <meta property="article:published_time" content="2020-04-05T14:06:17+02:00" />
@@ -112,7 +112,7 @@
             </span>
             <span class="reading-time">
               <i class="fas fa-clock"></i>
-              8-minute read
+              9-minute read
             </span>
           </div>
           
@@ -130,8 +130,8 @@
 	
 	<div class="admonition-content"><strong>Terraform:</strong> This <a href="https://github.com/terraform-providers/terraform-provider-azurerm/issues/">issue</a> is filed to add the last essential parts in the <a href="https://github.com/terraform-providers/terraform-provider-azurerm">Azure TerraForm provider</a> and is currently under review, after the merge I&rsquo;ll probably do an extra edition with TerraForm.</div>
 </aside>
-<p>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example.</p>
-<p>One of the resources which helped me the most was <a href="https://csa-ocp-ger.github.io/unicorn/challenges.aadpodidentity.html,">https://csa-ocp-ger.github.io/unicorn/challenges.aadpodidentity.html,</a> which provides you with more in depth knowledge on <strong>aad-pod-identity</strong> and <strong>Managed Service Identities</strong>. It showed my an overview and a quick starter for an .NET application.</p>
+<p>Last week I was looking into solutions how to authenticate a few pods on Azure Kubernetes Service to other Azure services. These pods contain applications build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of the just released AKS Managed Service Identities. Based on my experience and learning path I extended it to other Azure Services as well, and included Azure Storage in this blog post as an extra example.</p>
+<p>One of the resources which helped me the most were the <a href="https://csa-ocp-ger.github.io/unicorn/challenges.aadpodidentity.html">resources from Project Unicorn</a>, which provides you with more in depth knowledge on <strong>aad-pod-identity</strong> and <strong>Managed Service Identities</strong>. It showed my an overview and a quick starter for an .NET application.</p>
 <p>The focus of this blog is on Spring Boot applications and how it works for them. I&rsquo;ll try to fill the gap for Azure Kubernetes Service combined with Spring Boot applications + the new MSI feature for AKS. The Spring Boot application as demoed can in the end access Azure resources without a password or token as Kubernetes Secrets. Super Awesome!!</p>
 <h1 id="managed-service-identities-a-short-intro">Managed Service Identities: a short intro</h1>
 <p>To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</p>
@@ -197,10 +197,12 @@ az keyvault secret set --name your-property-name <span style="font-weight:bold;f
 </span><span style="font-weight:bold;font-style:italic"></span>  --vault-name $CLUSTERNAME --value youdidit135
 
 </code></pre></div><h2 id="step-3-add-a-container-registry">Step 3: Add a Container Registry</h2>
+<p>An AKS cluster needs a container registry to pull the containers from. We push our application in a later stage to this repository, although it is a bit hidden.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create an Azure Container Registry</span>
 az acr create -n $CLUSTERNAME -g $RESOURCE_GROUP --sku Basic
 
 </code></pre></div><h2 id="step-4-prepare-some-storage">Step 4: Prepare some Storage</h2>
+<p>Blob storage is realy awesome and is applied for a lot of usecases. Our application will list the blobs in our blob storage, but we first need to create it:)</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create Blob Storage in an Azure Storage Account</span>
 az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
 az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> --auth-mode login
@@ -233,13 +235,14 @@ export STORAGE_ID=<span style="font-weight:bold">$(</span>az storage account sho
 az role assignment create --role <span style="font-style:italic">&#34;Storage Blob Data Reader&#34;</span> --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --scope $STORAGE_ID
 </code></pre></div><h2 id="step-7-prepare-our-aks-cluster-with-aad-pod-identity">Step 7: Prepare our AKS cluster with aad-pod-identity</h2>
-<p>We are ready to deploy <code>aad-pod-identity</code>. It might seem simple from your point of view, but figuring it out took me a short while. We want to use our MSI within the cluster to do some magic for our pods. To make this happen, we need pod identities. With a few simple commands we make this magic happen:</p>
+<p>We are ready to deploy <code>aad-pod-identity</code>. It might seem simple from your point of view, but figuring it out took me a short while. We want to use our MSI within the cluster to do some magic for our pods. To make this happen, we need pod identities. Pod identities are a concept introduced by Microsoft and is based on a Kubernetes controller which redistributes the identities to the pods based on the <code>aadpodidbinding</code> label. With a few simple commands we deploy the controllers and make this magic happen:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># deploy aad-pod-identity</span>
 az aks get-credentials -g $RESOURCE_GROUP -n $CLUSTERNAME
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment-rbac.yaml
 NODE_RESOURCE_GROUP=<span style="font-weight:bold">$(</span>az aks show -g $RESOURCE_GROUP -n $CLUSTERNAME <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --query nodeResourceGroup -o tsv<span style="font-weight:bold">)</span>
 </code></pre></div><h2 id="step-8-extend-the-permissions-for-our-kubelet-identity">Step 8: Extend the permissions for our kubelet identity</h2>
+<p>Our kubelet identity (the same over all your nodepools) needs permissions. This identity is used by your controller to give your pod a token, based on the identity you assigned for your pod.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow our kubelet identity to manage the identities</span>
 az role assignment create --role <span style="font-style:italic">&#34;Virtual Machine Contributor&#34;</span> <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
@@ -248,6 +251,7 @@ az role assignment create --role <span style="font-style:italic">&#34;Managed Id
   --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
 </code></pre></div><h2 id="step-9-configure-your-cluster-to-use-the-identity-for-your-pod">Step 9: Configure your cluster to use the Identity for your pod</h2>
+<p>Now everything for our pod identity is set up, we need to configure the identity for our pod. One Kubernetes Custom Resource, the <strong>aadpodidenity</strong>, is containing the information which identities are available for assignment.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># find values for our AKS pod identity configuration:</span>
 CLIENT_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .clientId<span style="font-weight:bold">)</span>
 RESOURCE_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .id<span style="font-weight:bold">)</span>
@@ -267,8 +271,8 @@ cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentity.yml
 </span><span style="font-style:italic">  ClientID: $CLIENT_ID
 </span><span style="font-style:italic">EOT</span>
 kubectl apply -f azureidentity.yml
-
-<span style="font-style:italic"># bind the pod identity to pods with label `aadpodidbinding: demo`:</span>
+</code></pre></div><p>The second Kubernetes Custom Resource, the <strong>aadpodidenitybindig</strong>, is containing the mapping information between the identity available and the selector for the pod..</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># bind the pod identity to pods with label `aadpodidbinding: demo`:</span>
 cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentitybinding.yml
 </span><span style="font-style:italic">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
 </span><span style="font-style:italic">kind: AzureIdentityBinding
