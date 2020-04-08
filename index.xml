@@ -38,5 +38,14 @@
       <description>Herpost: Werken bij VX Company: Cloud Platform Engineer  Ruim 4 maanden geleden ben ik begonnen als Cloud Platform Engineer bij VX Company. In een splinternieuw team, met een splinternieuwe naam: Mission Control. Als team zijn wij verantwoordelijk voor een groep klanten, die hun applicatie in productie net zo soepel willen laten draaien als hij draait in onze ontwikkelstraat. Want dat is het leuke aan deze baan: de applicaties die wij draaiende houden voor onze klanten worden binnen hetzelfde gebouw ook gebouwd!</description>
     </item>
     
+    <item>
+      <title>Azure Context Switching from the Commandline</title>
+      <link>https://aristosvo.github.io/posts/azure-from-the-commandline/</link>
+      <pubDate>Tue, 10 Dec 2019 21:36:16 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/azure-from-the-commandline/</guid>
+      <description>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</description>
+    </item>
+    
   </channel>
 </rss>
