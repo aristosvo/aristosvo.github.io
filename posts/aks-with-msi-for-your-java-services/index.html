@@ -45,6 +45,12 @@
     
 
     
+      
+        
+        
+        <link rel="stylesheet" href="https://aristosvo.github.io/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css" integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin="anonymous" media="screen" />
+      
+    
 
     
       
@@ -65,7 +71,9 @@
 
   
   
-  <body class="colorscheme-light">
+    
+  
+  <body class="colorscheme-auto">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
@@ -166,176 +174,176 @@
 <li><a href="https://linuxize.com/post/how-to-install-apache-maven-on-ubuntu-18-04/">Maven</a></li>
 <li><a href="https://github.com/Azure/acr-docker-credential-helper#installation">docker-credential-acr-linux</a></li>
 </ul>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># install az cli latest version</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># install az cli latest version</span>
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-<span style="font-style:italic"># install azul JDK and mvn 3.6.x</span>
+<span style="color:#007f7f"># install azul JDK and mvn 3.6.x</span>
 sudo apt-get install zulu-11 -y
 sudo apt install maven -y
 mvn -version
 
-<span style="font-style:italic"># install docker credential helper for acr/linux</span>
+<span style="color:#007f7f"># install docker credential helper for acr/linux</span>
 curl -L https://aka.ms/acr/installaad/bash | /bin/bash
 </code></pre></div><h2 id="step-1-fire-up-aks">Step 1: Fire up AKS</h2>
 <p>First step along the way is to create an AKS environment which facilitates this. First of all, create AKS with MSI enabled. This is a recent feature for AKS:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az login
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az login
 
-export CLUSTERNAME=testmsi
-export RESOURCE_GROUP=aks-rg
-export SUBS=&lt;your subscription id&gt;
+<span style="color:#fff;font-weight:bold">export</span> CLUSTERNAME=testmsi
+<span style="color:#fff;font-weight:bold">export</span> RESOURCE_GROUP=aks-rg
+<span style="color:#fff;font-weight:bold">export</span> SUBS=&lt;your subscription id&gt;
 az resource create -n $RESOURCE_GROUP
 az aks create -g $RESOURCE_GROUP -n $CLUSTERNAME --enable-managed-identity
 </code></pre></div><h2 id="step-2-create-a-key-vault">Step 2: Create a Key Vault</h2>
 <p>In the meanwhile, waiting for the cluster is not necessary. Let&rsquo;s open up another shell and start creating the other components necessary for this experiment:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export CLUSTERNAME=testmsi
-export RESOURCE_GROUP=aks-rg
-export SUBS=&lt;your subscription id&gt;
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">export</span> CLUSTERNAME=testmsi
+<span style="color:#fff;font-weight:bold">export</span> RESOURCE_GROUP=aks-rg
+<span style="color:#fff;font-weight:bold">export</span> SUBS=&lt;your subscription id&gt;
 
-<span style="font-style:italic"># create an Azure Key Vault with a few secrets</span>
+<span style="color:#007f7f"># create an Azure Key Vault with a few secrets</span>
 az keyvault create -n $CLUSTERNAME -g $RESOURCE_GROUP
-az keyvault secret set --name your-property-name <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --vault-name $CLUSTERNAME --value youdidit135
+az keyvault secret <span style="color:#fff;font-weight:bold">set</span> --name your-property-name <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --vault-name $CLUSTERNAME --value youdidit135
 
 </code></pre></div><h2 id="step-3-add-a-container-registry">Step 3: Add a Container Registry</h2>
 <p>An AKS cluster needs a container registry to pull the containers from. We push our application in a later stage to this repository, although it is a bit hidden.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create an Azure Container Registry</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># create an Azure Container Registry</span>
 az acr create -n $CLUSTERNAME -g $RESOURCE_GROUP --sku Basic
 
 </code></pre></div><h2 id="step-4-prepare-some-storage">Step 4: Prepare some Storage</h2>
 <p>Blob storage is realy awesome and is applied for a lot of usecases. Our application will list the blobs in our blob storage, but we first need to create it:)</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create Blob Storage in an Azure Storage Account</span>
-az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
-az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> --auth-mode login
-cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; blobs.txt
-</span><span style="font-style:italic">This is your test file
-</span><span style="font-style:italic">EOT</span>
-az storage blob upload -f ./blobs.txt -c <span style="font-style:italic">&#34;blobs&#34;</span> -n <span style="font-style:italic">&#34;blobs.txt&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># create Blob Storage in an Azure Storage Account</span>
+az storage account create -n <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>CLUSTERNAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
+az storage container create -n <span style="color:#0ff;font-weight:bold">&#34;blobs&#34;</span> --account-name <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>CLUSTERNAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">sa&#34;</span> --auth-mode login
+cat <span style="color:#0ff;font-weight:bold">&lt;&lt;EOT &gt;&gt; blobs.txt
+</span><span style="color:#0ff;font-weight:bold">This is your test file
+</span><span style="color:#0ff;font-weight:bold">EOT</span>
+az storage blob upload -f ./blobs.txt -c <span style="color:#0ff;font-weight:bold">&#34;blobs&#34;</span> -n <span style="color:#0ff;font-weight:bold">&#34;blobs.txt&#34;</span> --account-name <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>CLUSTERNAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">sa&#34;</span>
 
-export STORAGE_URI=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;primaryEndpoints.blob&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+<span style="color:#fff;font-weight:bold">export</span> STORAGE_URI=<span style="color:#fff;font-weight:bold">$(</span>az storage account show -n <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>CLUSTERNAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="color:#0ff;font-weight:bold">&#39;primaryEndpoints.blob&#39;</span> -o tsv<span style="color:#fff;font-weight:bold">)</span>
 </code></pre></div><h2 id="step-5-connect-aks-to-your-container-registry">Step 5: Connect AKS to your container registry</h2>
 <p>Wow, that was a lot to take in already. Let&rsquo;s check first if AKS is already there. If not, take a small break and drink some water. Stay hydrated!)</p>
 <p>If AKS is provisioned for you, we want to connect your Azure Container Registry to your AKS instance:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az aks update -n $CLUSTERNAME -g $RESOURCE_GROUP --attach-acr $CLUSTERNAME
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">az aks update -n $CLUSTERNAME -g $RESOURCE_GROUP --attach-acr $CLUSTERNAME
 </code></pre></div><h2 id="step-6-create-an-identity-for-our-pod">Step 6: Create an identity for our pod</h2>
 <p>The pod will use an user-assiged Managed Identity. This identity is not bound to a service, but is visible within your resource group.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># make an identity for our pods</span>
-export POD_IDENTITY_NAME=demo-aad1
-export PRINCIPAL_ID=<span style="font-weight:bold">$(</span>az identity create -n $POD_IDENTITY_NAME <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  -g $NODE_RESOURCE_GROUP --query <span style="font-style:italic">&#39;principalId&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># make an identity for our pods</span>
+<span style="color:#fff;font-weight:bold">export</span> POD_IDENTITY_NAME=demo-aad1
+<span style="color:#fff;font-weight:bold">export</span> PRINCIPAL_ID=<span style="color:#fff;font-weight:bold">$(</span>az identity create -n $POD_IDENTITY_NAME <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  -g $NODE_RESOURCE_GROUP --query <span style="color:#0ff;font-weight:bold">&#39;principalId&#39;</span> -o tsv<span style="color:#fff;font-weight:bold">)</span>
 </code></pre></div><p>Our identity to use by the pod is created, but what about it&rsquo;s permissions? And how to connect it to the actual pod?
 We add permissions to access the Key Vault and to read our blob storage:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow access to the key vault secrets for our pod identity</span>
-az role assignment create --role Reader --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
-az keyvault set-policy -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="font-weight:bold;font-style:italic">\ </span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># allow access to the key vault secrets for our pod identity</span>
+az role assignment create --role Reader --assignee $PRINCIPAL_ID <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+az keyvault set-policy -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="color:#0ff;font-weight:bold">\ </span>
   --object-id $PRINCIPAL_ID --secret-permissions get list
 
-export STORAGE_ID=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;id&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+<span style="color:#fff;font-weight:bold">export</span> STORAGE_ID=<span style="color:#fff;font-weight:bold">$(</span>az storage account show -n <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>CLUSTERNAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="color:#0ff;font-weight:bold">&#39;id&#39;</span> -o tsv<span style="color:#fff;font-weight:bold">)</span>
 
-az role assignment create --role <span style="font-style:italic">&#34;Storage Blob Data Reader&#34;</span> --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --scope $STORAGE_ID
+az role assignment create --role <span style="color:#0ff;font-weight:bold">&#34;Storage Blob Data Reader&#34;</span> --assignee $PRINCIPAL_ID <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --scope $STORAGE_ID
 </code></pre></div><h2 id="step-7-prepare-our-aks-cluster-with-aad-pod-identity">Step 7: Prepare our AKS cluster with aad-pod-identity</h2>
-<p>We are ready to deploy <strong>aad-pod-identity</strong>. It might seem simple from your point of view, but figuring it out took me a short while. We want to use our MSI within the cluster to do some magic for our pods. To make this happen, we need pod identities. Pod identities are a concept introduced by Microsoft and is based on a Kubernetes controller which redistributes the identities to the pods based on the <strong>aadpodidbinding</strong> label. With a few simple commands we deploy the controllers and make this magic happen:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># deploy aad-pod-identity</span>
+<p>We are ready to deploy <strong>aad-pod-identity</strong>. It might seem simple from your point of view, but figuring it out took me a short while. We want to use our MSI within the cluster to do some magic for our pods. To make this happen, we need pod identities. Pod identities are a concept introduced by Microsoft and is based on a Kubernetes controller which redistributes the identities to the pods based on the <strong>aadpodidbinding</strong>hubo label. With a few simple commands we deploy the controllers and make this magic happen:</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># deploy aad-pod-identity</span>
 az aks get-credentials -g $RESOURCE_GROUP -n $CLUSTERNAME
 kubectl create -f https://raw.githubusercontent.com/Azure/aad-pod-identity/master/deploy/infra/deployment-rbac.yaml
-NODE_RESOURCE_GROUP=<span style="font-weight:bold">$(</span>az aks show -g $RESOURCE_GROUP -n $CLUSTERNAME <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --query nodeResourceGroup -o tsv<span style="font-weight:bold">)</span>
+NODE_RESOURCE_GROUP=<span style="color:#fff;font-weight:bold">$(</span>az aks show -g $RESOURCE_GROUP -n $CLUSTERNAME <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --query nodeResourceGroup -o tsv<span style="color:#fff;font-weight:bold">)</span>
 </code></pre></div><h2 id="step-8-extend-the-permissions-for-our-kubelet-identity">Step 8: Extend the permissions for our kubelet identity</h2>
 <p>Our kubelet identity (the same over all your nodepools) needs permissions. This identity is used by your controller to give your pod a token, based on the identity you assigned for your pod.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow our kubelet identity to manage the identities</span>
-az role assignment create --role <span style="font-style:italic">&#34;Virtual Machine Contributor&#34;</span> <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
-az role assignment create --role <span style="font-style:italic">&#34;Managed Identity Operator&#34;</span> <span style="font-weight:bold;font-style:italic">\ </span>
-  --assignee $KUBELET_IDENTITY_ID  <span style="font-weight:bold;font-style:italic">\
-</span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># allow our kubelet identity to manage the identities</span>
+az role assignment create --role <span style="color:#0ff;font-weight:bold">&#34;Virtual Machine Contributor&#34;</span> <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --assignee $KUBELET_IDENTITY_ID  <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
+az role assignment create --role <span style="color:#0ff;font-weight:bold">&#34;Managed Identity Operator&#34;</span> <span style="color:#0ff;font-weight:bold">\ </span>
+  --assignee $KUBELET_IDENTITY_ID  <span style="color:#0ff;font-weight:bold">\
+</span><span style="color:#0ff;font-weight:bold"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
 </code></pre></div><h2 id="step-9-configure-your-cluster-to-use-the-identity-for-your-pod">Step 9: Configure your cluster to use the Identity for your pod</h2>
 <p>Now everything for our pod identity is set up, we need to configure the identity for our pod. One Kubernetes Custom Resource, the <strong>aadpodidenity</strong>, is containing the information which identities are available for assignment.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># find values for our AKS pod identity configuration:</span>
-CLIENT_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .clientId<span style="font-weight:bold">)</span>
-RESOURCE_ID=<span style="font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="font-weight:bold;font-style:italic">${</span>NODE_RESOURCE_GROUP<span style="font-weight:bold;font-style:italic">}</span> | jq -r .id<span style="font-weight:bold">)</span>
-echo <span style="font-style:italic">&#34;Pod Identity name = </span><span style="font-weight:bold;font-style:italic">${</span>POD_IDENTITY_NAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
-echo <span style="font-style:italic">&#34;Client id = </span><span style="font-weight:bold;font-style:italic">${</span>CLIENT_ID<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
-echo <span style="font-style:italic">&#34;Resource id = </span><span style="font-weight:bold;font-style:italic">${</span>RESOURCE_ID<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># find values for our AKS pod identity configuration:</span>
+CLIENT_ID=<span style="color:#fff;font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="color:#0ff;font-weight:bold">${</span>NODE_RESOURCE_GROUP<span style="color:#0ff;font-weight:bold">}</span> | jq -r .clientId<span style="color:#fff;font-weight:bold">)</span>
+RESOURCE_ID=<span style="color:#fff;font-weight:bold">$(</span>az identity show -n $POD_IDENTITY_NAME -g <span style="color:#0ff;font-weight:bold">${</span>NODE_RESOURCE_GROUP<span style="color:#0ff;font-weight:bold">}</span> | jq -r .id<span style="color:#fff;font-weight:bold">)</span>
+<span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;Pod Identity name = </span><span style="color:#0ff;font-weight:bold">${</span>POD_IDENTITY_NAME<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+<span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;Client id = </span><span style="color:#0ff;font-weight:bold">${</span>CLIENT_ID<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
+<span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;Resource id = </span><span style="color:#0ff;font-weight:bold">${</span>RESOURCE_ID<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
 
-<span style="font-style:italic"># apply pod identity configuration to AKS</span>
-cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentity.yml
-</span><span style="font-style:italic">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
-</span><span style="font-style:italic">kind: AzureIdentity
-</span><span style="font-style:italic">metadata:
-</span><span style="font-style:italic">  name: $POD_IDENTITY_NAME
-</span><span style="font-style:italic">spec:
-</span><span style="font-style:italic">  type: 0 # Azure ID (1 is SP)
-</span><span style="font-style:italic">  ResourceID: $RESOURCE_ID
-</span><span style="font-style:italic">  ClientID: $CLIENT_ID
-</span><span style="font-style:italic">EOT</span>
+<span style="color:#007f7f"># apply pod identity configuration to AKS</span>
+cat <span style="color:#0ff;font-weight:bold">&lt;&lt;EOT &gt;&gt; azureidentity.yml
+</span><span style="color:#0ff;font-weight:bold">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
+</span><span style="color:#0ff;font-weight:bold">kind: AzureIdentity
+</span><span style="color:#0ff;font-weight:bold">metadata:
+</span><span style="color:#0ff;font-weight:bold">  name: $POD_IDENTITY_NAME
+</span><span style="color:#0ff;font-weight:bold">spec:
+</span><span style="color:#0ff;font-weight:bold">  type: 0 # Azure ID (1 is SP)
+</span><span style="color:#0ff;font-weight:bold">  ResourceID: $RESOURCE_ID
+</span><span style="color:#0ff;font-weight:bold">  ClientID: $CLIENT_ID
+</span><span style="color:#0ff;font-weight:bold">EOT</span>
 kubectl apply -f azureidentity.yml
 </code></pre></div><p>The second Kubernetes Custom Resource, the <strong>aadpodidenitybindig</strong>, is containing the mapping information between the identity available and the selector for the pod..</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># bind the pod identity to pods with label `aadpodidbinding: demo`:</span>
-cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentitybinding.yml
-</span><span style="font-style:italic">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
-</span><span style="font-style:italic">kind: AzureIdentityBinding
-</span><span style="font-style:italic">metadata:
-</span><span style="font-style:italic">  name: $POD_IDENTITY_NAME-binding
-</span><span style="font-style:italic">spec: 
-</span><span style="font-style:italic">  AzureIdentity: $POD_IDENTITY_NAME
-</span><span style="font-style:italic">  Selector: &#34;demo&#34;
-</span><span style="font-style:italic">EOT</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># bind the pod identity to pods with label `aadpodidbinding: demo`:</span>
+cat <span style="color:#0ff;font-weight:bold">&lt;&lt;EOT &gt;&gt; azureidentitybinding.yml
+</span><span style="color:#0ff;font-weight:bold">apiVersion: &#34;aadpodidentity.k8s.io/v1&#34;
+</span><span style="color:#0ff;font-weight:bold">kind: AzureIdentityBinding
+</span><span style="color:#0ff;font-weight:bold">metadata:
+</span><span style="color:#0ff;font-weight:bold">  name: $POD_IDENTITY_NAME-binding
+</span><span style="color:#0ff;font-weight:bold">spec: 
+</span><span style="color:#0ff;font-weight:bold">  AzureIdentity: $POD_IDENTITY_NAME
+</span><span style="color:#0ff;font-weight:bold">  Selector: &#34;demo&#34;
+</span><span style="color:#0ff;font-weight:bold">EOT</span>
 kubectl apply -f azureidentitybinding.yml
 </code></pre></div><h2 id="step-10-create-an-application-and-build-it-push-a-container-to-your-registry">Step 10: Create an application and build it, push a container to your registry</h2>
 <p>We&rsquo;ve done a lot already, but we still lack an application which reads the secrets from the Azure Key Vault. Therefore, we use an application which only reads the secret and writes it to the logs. <strong>Don&rsquo;t do that in production:)</strong>&rsquo;</p>
 <p>The Spring Boot application to use can be found <a href="https://github.com/aristosvo/azure-msi-spring-boot">here</a>. When we build this application, Jib takes care of pushing an image to your container registry directly. So, let&rsquo;s do it!</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># clone the application</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># clone the application</span>
 git clone https://github.com/aristosvo/azure-msi-spring-boot.git
 
-<span style="font-style:italic"># login to your Azure Container Registry</span>
+<span style="color:#007f7f"># login to your Azure Container Registry</span>
 az acr login -n $CLUSTERNAME
 
-<span style="font-style:italic"># build the application and push it with Jib to your container registry</span>
-cd ./azure-keyvault-secrets-spring-boot
+<span style="color:#007f7f"># build the application and push it with Jib to your container registry</span>
+<span style="color:#fff;font-weight:bold">cd</span> ./azure-keyvault-secrets-spring-boot
 mvn clean install
 </code></pre></div><h2 id="step-11-last-but-not-least-deploy-and-see-the-magic-happen">Step 11: Last but not least, deploy and see the magic happen!</h2>
 <p>We are almost there. Only 2 things left:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># deploying the application</span>
-cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; deployment.yml
-</span><span style="font-style:italic">apiVersion: extensions/v1beta1
-</span><span style="font-style:italic">kind: Deployment
-</span><span style="font-style:italic">metadata:
-</span><span style="font-style:italic">  name: spring-boot-demo-msi
-</span><span style="font-style:italic">spec:
-</span><span style="font-style:italic">  replicas: 1
-</span><span style="font-style:italic">  minReadySeconds: 5
-</span><span style="font-style:italic">  strategy:
-</span><span style="font-style:italic">    type: RollingUpdate
-</span><span style="font-style:italic">    rollingUpdate:
-</span><span style="font-style:italic">      maxSurge: 1
-</span><span style="font-style:italic">      maxUnavailable: 1
-</span><span style="font-style:italic">  template:
-</span><span style="font-style:italic">    metadata:
-</span><span style="font-style:italic">      labels:
-</span><span style="font-style:italic">        name: spring-boot-demo
-</span><span style="font-style:italic">        app: spring-boot-demo
-</span><span style="font-style:italic">        aadpodidbinding: demo
-</span><span style="font-style:italic">    spec:
-</span><span style="font-style:italic">      containers:
-</span><span style="font-style:italic">      - name: spring-boot-container
-</span><span style="font-style:italic">        imagePullPolicy: Always
-</span><span style="font-style:italic">        image: $CLUSTERNAME.azurecr.io/azure-msi-spring-boot:example
-</span><span style="font-style:italic">        env:
-</span><span style="font-style:italic">          - name: KEYVAULT_URI
-</span><span style="font-style:italic">            value: &#34;https://$CLUSTERNAME.vault.azure.net&#34;
-</span><span style="font-style:italic">          - name: STORAGE_URI
-</span><span style="font-style:italic">            value: &#34;https://${CLUSTERNAME}sa.blob.core.windows.net&#34;
-</span><span style="font-style:italic">        ports:
-</span><span style="font-style:italic">          - containerPort: 80
-</span><span style="font-style:italic">            name: http
-</span><span style="font-style:italic">            protocol: TCP
-</span><span style="font-style:italic">EOT</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#007f7f"># deploying the application</span>
+cat <span style="color:#0ff;font-weight:bold">&lt;&lt;EOT &gt;&gt; deployment.yml
+</span><span style="color:#0ff;font-weight:bold">apiVersion: extensions/v1beta1
+</span><span style="color:#0ff;font-weight:bold">kind: Deployment
+</span><span style="color:#0ff;font-weight:bold">metadata:
+</span><span style="color:#0ff;font-weight:bold">  name: spring-boot-demo-msi
+</span><span style="color:#0ff;font-weight:bold">spec:
+</span><span style="color:#0ff;font-weight:bold">  replicas: 1
+</span><span style="color:#0ff;font-weight:bold">  minReadySeconds: 5
+</span><span style="color:#0ff;font-weight:bold">  strategy:
+</span><span style="color:#0ff;font-weight:bold">    type: RollingUpdate
+</span><span style="color:#0ff;font-weight:bold">    rollingUpdate:
+</span><span style="color:#0ff;font-weight:bold">      maxSurge: 1
+</span><span style="color:#0ff;font-weight:bold">      maxUnavailable: 1
+</span><span style="color:#0ff;font-weight:bold">  template:
+</span><span style="color:#0ff;font-weight:bold">    metadata:
+</span><span style="color:#0ff;font-weight:bold">      labels:
+</span><span style="color:#0ff;font-weight:bold">        name: spring-boot-demo
+</span><span style="color:#0ff;font-weight:bold">        app: spring-boot-demo
+</span><span style="color:#0ff;font-weight:bold">        aadpodidbinding: demo
+</span><span style="color:#0ff;font-weight:bold">    spec:
+</span><span style="color:#0ff;font-weight:bold">      containers:
+</span><span style="color:#0ff;font-weight:bold">      - name: spring-boot-container
+</span><span style="color:#0ff;font-weight:bold">        imagePullPolicy: Always
+</span><span style="color:#0ff;font-weight:bold">        image: $CLUSTERNAME.azurecr.io/azure-msi-spring-boot:example
+</span><span style="color:#0ff;font-weight:bold">        env:
+</span><span style="color:#0ff;font-weight:bold">          - name: KEYVAULT_URI
+</span><span style="color:#0ff;font-weight:bold">            value: &#34;https://$CLUSTERNAME.vault.azure.net&#34;
+</span><span style="color:#0ff;font-weight:bold">          - name: STORAGE_URI
+</span><span style="color:#0ff;font-weight:bold">            value: &#34;https://${CLUSTERNAME}sa.blob.core.windows.net&#34;
+</span><span style="color:#0ff;font-weight:bold">        ports:
+</span><span style="color:#0ff;font-weight:bold">          - containerPort: 80
+</span><span style="color:#0ff;font-weight:bold">            name: http
+</span><span style="color:#0ff;font-weight:bold">            protocol: TCP
+</span><span style="color:#0ff;font-weight:bold">EOT</span>
 kubectl apply -f deployment.yml
 
-<span style="font-style:italic"># check the logs!</span>
-kubectl log -l app=spring-boot-demo | grep <span style="font-style:italic">&#34;yourSecretPropertyName&#34;</span>
+<span style="color:#007f7f"># check the logs!</span>
+kubectl log -l app=spring-boot-demo | grep <span style="color:#0ff;font-weight:bold">&#34;yourSecretPropertyName&#34;</span>
 </code></pre></div><p>The result should contain a message that your secret property had value &lsquo;youdidit135&rsquo; and that one blob is found, &lsquo;blobs&rsquo;.</p>
 <p>Have a nice day!</p>
 <p><a href="https://github.com/aristosvo">aristosvo</a></p>

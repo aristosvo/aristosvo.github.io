@@ -45,6 +45,12 @@
     
 
     
+      
+        
+        
+        <link rel="stylesheet" href="https://aristosvo.github.io/css/coder-dark.min.83a2010dac9f59f943b3004cd6c4f230507ad036da635d3621401d42ec4e2835.css" integrity="sha256-g6IBDayfWflDswBM1sTyMFB60DbaY102IUAdQuxOKDU=" crossorigin="anonymous" media="screen" />
+      
+    
 
     
       
@@ -65,7 +71,9 @@
 
   
   
-  <body class="colorscheme-light">
+    
+  
+  <body class="colorscheme-auto">
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
@@ -125,71 +133,71 @@
         <p>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</p>
 <h2 id="switching-subscriptions">Switching subscriptions</h2>
 <p>Because of our work for different clients, my first <code>bash</code> script I wrote to make work easier was a script to switch subscriptions, <code>saz</code> or <code>switchazure</code>:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
-</span><span style=""></span>
-unset options i
-<span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
-  options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
-<span style="font-weight:bold">done</span> &lt; &lt;(az account list --query <span style="font-style:italic">&#39;[].{id:id, name:name}&#39;</span> -o tsv | cut -f 2,1 )
-tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
-<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop the script&#34;</span>; <span style="font-weight:bold">do</span>
-  <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
-  <span style="font-weight:bold">then</span>
-    subscriptionid=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
-    echo -e <span style="font-style:italic">&#34;--&gt; Set Subscription: az account set -s </span><span style="font-weight:bold;font-style:italic">${</span>subscriptionid<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">\n&#34;</span>
-    az account set -s $subscriptionid
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#0f0;font-weight:bold">#!/usr/bin/env bash
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">unset</span> options i
+<span style="color:#fff;font-weight:bold">while</span> IFS= <span style="color:#fff;font-weight:bold">read</span> -r -d <span style="color:#0ff;font-weight:bold">$&#39;\n&#39;</span> f; <span style="color:#fff;font-weight:bold">do</span>
+  options[i++]=<span style="color:#0ff;font-weight:bold">&#34;</span>$f<span style="color:#0ff;font-weight:bold">&#34;</span>
+<span style="color:#fff;font-weight:bold">done</span> &lt; &lt;(az account list --query <span style="color:#0ff;font-weight:bold">&#39;[].{id:id, name:name}&#39;</span> -o tsv | cut -f 2,1 )
+tLen=<span style="color:#0ff;font-weight:bold">${#</span>options[@]<span style="color:#0ff;font-weight:bold">}</span>
+<span style="color:#fff;font-weight:bold">select</span> opt in <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>options[@]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span> <span style="color:#0ff;font-weight:bold">&#34;Stop the script&#34;</span>; <span style="color:#fff;font-weight:bold">do</span>
+  <span style="color:#fff;font-weight:bold">if</span> [ <span style="color:#0ff;font-weight:bold">&#34;</span>$REPLY<span style="color:#0ff;font-weight:bold">&#34;</span> -le <span style="color:#0ff;font-weight:bold">&#34;</span>$tLen<span style="color:#0ff;font-weight:bold">&#34;</span> ]; 
+  <span style="color:#fff;font-weight:bold">then</span>
+    subscriptionid=<span style="color:#0ff;font-weight:bold">`</span><span style="color:#fff;font-weight:bold">echo</span> $opt | cut -f <span style="color:#ff0;font-weight:bold">1</span> -d <span style="color:#0ff;font-weight:bold">&#34; &#34;</span><span style="color:#0ff;font-weight:bold">`</span>
+    <span style="color:#fff;font-weight:bold">echo</span> -e <span style="color:#0ff;font-weight:bold">&#34;--&gt; Set Subscription: az account set -s </span><span style="color:#0ff;font-weight:bold">${</span>subscriptionid<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">\n&#34;</span>
+    az account <span style="color:#fff;font-weight:bold">set</span> -s $subscriptionid
     
-    echo <span style="font-style:italic">&#34;--&gt; Subscription is:&#34;</span>
+    <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;--&gt; Subscription is:&#34;</span>
     az account show -o table
-    break
-  <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
-  <span style="font-weight:bold">then</span>
-    echo <span style="font-style:italic">&#34;--&gt; Stopped the script&#34;</span>
-    break
-  <span style="font-weight:bold">else</span>
-    echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
-    break
-  <span style="font-weight:bold">fi</span>
-<span style="font-weight:bold">done</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">elif</span> [ <span style="color:#0ff;font-weight:bold">&#34;</span>$REPLY<span style="color:#0ff;font-weight:bold">&#34;</span> -eq <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#fff;font-weight:bold">$((</span>$tLen+<span style="color:#ff0;font-weight:bold">1</span><span style="color:#fff;font-weight:bold">))</span><span style="color:#0ff;font-weight:bold">&#34;</span> ];
+  <span style="color:#fff;font-weight:bold">then</span>
+    <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;--&gt; Stopped the script&#34;</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">else</span>
+    <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;Ho ho ho. Something went wrong. </span><span style="color:#0ff;font-weight:bold">${</span>REPLY<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> is no good a selector&#34;</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">fi</span>
+<span style="color:#fff;font-weight:bold">done</span>
 </code></pre></div><p>I put it here: <code>~/azure-script/switchazure.sh</code> and voila!</p>
 <p>For the people who are like me (lazy and not born from the bash shell)</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias saz=<span style="font-style:italic">&#39;~/azure-scripts/switchazure.sh&#39;</span>
-chmod +x <span style="font-style:italic">&#39;~/azure-scripts/switchazure.sh&#39;</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">alias</span> saz=<span style="color:#0ff;font-weight:bold">&#39;~/azure-scripts/switchazure.sh&#39;</span>
+chmod +x <span style="color:#0ff;font-weight:bold">&#39;~/azure-scripts/switchazure.sh&#39;</span>
 </code></pre></div><p>To be honest, I use this every day a few times a day. In the future it will probably change a bit due to the level of automation I&rsquo;m planning to bring into the organisation, but for now it works like a charm.</p>
 <h2 id="kubernetes-switching">Kubernetes switching</h2>
 <p>A simular approach worked for me, adding Kubernetes contexts. I don&rsquo;t want to do the lookup myself;) After that, I use <a href="https://github.com/ahmetb/kubectx">kubectx</a> on my imported context.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
-</span><span style=""></span>
-unset options i
-<span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
-  options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
-<span style="font-weight:bold">done</span> &lt; &lt;(az aks list --query <span style="font-style:italic">&#39;[].{name:name, resourcegroup:resourceGroup}&#39;</span> -otsv | cut -f 1,2 )
-tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
-<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop script&#34;</span>; <span style="font-weight:bold">do</span>
-  echo $opt
-  <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
-  <span style="font-weight:bold">then</span>
-    clustername=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
-    resourcegroup=<span style="font-style:italic">`</span>echo $opt | cut -f 2 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
-    echo -e <span style="font-style:italic">&#34;\n--&gt; Get Credentials: az aks get-credentials -n </span><span style="font-weight:bold;font-style:italic">${</span>clustername<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> -g </span><span style="font-weight:bold;font-style:italic">${</span>resourcegroup<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#0f0;font-weight:bold">#!/usr/bin/env bash
+</span><span style="color:#0f0;font-weight:bold"></span>
+<span style="color:#fff;font-weight:bold">unset</span> options i
+<span style="color:#fff;font-weight:bold">while</span> IFS= <span style="color:#fff;font-weight:bold">read</span> -r -d <span style="color:#0ff;font-weight:bold">$&#39;\n&#39;</span> f; <span style="color:#fff;font-weight:bold">do</span>
+  options[i++]=<span style="color:#0ff;font-weight:bold">&#34;</span>$f<span style="color:#0ff;font-weight:bold">&#34;</span>
+<span style="color:#fff;font-weight:bold">done</span> &lt; &lt;(az aks list --query <span style="color:#0ff;font-weight:bold">&#39;[].{name:name, resourcegroup:resourceGroup}&#39;</span> -otsv | cut -f 1,2 )
+tLen=<span style="color:#0ff;font-weight:bold">${#</span>options[@]<span style="color:#0ff;font-weight:bold">}</span>
+<span style="color:#fff;font-weight:bold">select</span> opt in <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#0ff;font-weight:bold">${</span>options[@]<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span> <span style="color:#0ff;font-weight:bold">&#34;Stop script&#34;</span>; <span style="color:#fff;font-weight:bold">do</span>
+  <span style="color:#fff;font-weight:bold">echo</span> $opt
+  <span style="color:#fff;font-weight:bold">if</span> [ <span style="color:#0ff;font-weight:bold">&#34;</span>$REPLY<span style="color:#0ff;font-weight:bold">&#34;</span> -le <span style="color:#0ff;font-weight:bold">&#34;</span>$tLen<span style="color:#0ff;font-weight:bold">&#34;</span> ]; 
+  <span style="color:#fff;font-weight:bold">then</span>
+    clustername=<span style="color:#0ff;font-weight:bold">`</span><span style="color:#fff;font-weight:bold">echo</span> $opt | cut -f <span style="color:#ff0;font-weight:bold">1</span> -d <span style="color:#0ff;font-weight:bold">&#34; &#34;</span><span style="color:#0ff;font-weight:bold">`</span>
+    resourcegroup=<span style="color:#0ff;font-weight:bold">`</span><span style="color:#fff;font-weight:bold">echo</span> $opt | cut -f <span style="color:#ff0;font-weight:bold">2</span> -d <span style="color:#0ff;font-weight:bold">&#34; &#34;</span><span style="color:#0ff;font-weight:bold">`</span>
+    <span style="color:#fff;font-weight:bold">echo</span> -e <span style="color:#0ff;font-weight:bold">&#34;\n--&gt; Get Credentials: az aks get-credentials -n </span><span style="color:#0ff;font-weight:bold">${</span>clustername<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> -g </span><span style="color:#0ff;font-weight:bold">${</span>resourcegroup<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold">&#34;</span>
     az aks get-credentials -n $clustername -g $resourcegroup
-    <span style="font-style:italic"># echo -e &#34;\n--&gt; Contexts available are:&#34;</span>
-    <span style="font-style:italic"># kubectl ctx</span>
-    break
-  <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
-  <span style="font-weight:bold">then</span>
-    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
-    break
-  <span style="font-weight:bold">else</span>
-    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
-    echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
-    break
-  <span style="font-weight:bold">fi</span>
-<span style="font-weight:bold">done</span>
+    <span style="color:#007f7f"># echo -e &#34;\n--&gt; Contexts available are:&#34;</span>
+    <span style="color:#007f7f"># kubectl ctx</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">elif</span> [ <span style="color:#0ff;font-weight:bold">&#34;</span>$REPLY<span style="color:#0ff;font-weight:bold">&#34;</span> -eq <span style="color:#0ff;font-weight:bold">&#34;</span><span style="color:#fff;font-weight:bold">$((</span>$tLen+<span style="color:#ff0;font-weight:bold">1</span><span style="color:#fff;font-weight:bold">))</span><span style="color:#0ff;font-weight:bold">&#34;</span> ];
+  <span style="color:#fff;font-weight:bold">then</span>
+    <span style="color:#fff;font-weight:bold">echo</span> -e <span style="color:#0ff;font-weight:bold">&#34;\n--&gt; Script stopped&#34;</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">else</span>
+    <span style="color:#fff;font-weight:bold">echo</span> -e <span style="color:#0ff;font-weight:bold">&#34;\n--&gt; Script stopped&#34;</span>
+    <span style="color:#fff;font-weight:bold">echo</span> <span style="color:#0ff;font-weight:bold">&#34;Ho ho ho. Something went wrong. </span><span style="color:#0ff;font-weight:bold">${</span>REPLY<span style="color:#0ff;font-weight:bold">}</span><span style="color:#0ff;font-weight:bold"> is no good a selector&#34;</span>
+    <span style="color:#fff;font-weight:bold">break</span>
+  <span style="color:#fff;font-weight:bold">fi</span>
+<span style="color:#fff;font-weight:bold">done</span>
 </code></pre></div><p>I put it here: <code>~/azure-script/getaksctx.sh</code> and voila!</p>
 <p>For the people who are like me:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias gac=<span style="font-style:italic">&#39;~/azure-scripts/getaksctx.sh&#39;</span>
-chmod +x <span style="font-style:italic">&#39;~/azure-scripts/getaksctx.sh&#39;</span>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#fff;font-weight:bold">alias</span> gac=<span style="color:#0ff;font-weight:bold">&#39;~/azure-scripts/getaksctx.sh&#39;</span>
+chmod +x <span style="color:#0ff;font-weight:bold">&#39;~/azure-scripts/getaksctx.sh&#39;</span>
 </code></pre></div>
       </div>
 
