@@ -29,5 +29,14 @@
       <description>Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&amp;rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault.</description>
     </item>
     
+    <item>
+      <title>Werken bij VX Company: Cloud Platform Engineer [Dutch]</title>
+      <link>https://aristosvo.github.io/posts/impressie-vx-company/</link>
+      <pubDate>Tue, 24 Mar 2020 14:06:17 +0200</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/impressie-vx-company/</guid>
+      <description>Herpost: Werken bij VX Company: Cloud Platform Engineer  Ruim 4 maanden geleden ben ik begonnen als Cloud Platform Engineer bij VX Company. In een splinternieuw team, met een splinternieuwe naam: Mission Control. Als team zijn wij verantwoordelijk voor een groep klanten, die hun applicatie in productie net zo soepel willen laten draaien als hij draait in onze ontwikkelstraat. Want dat is het leuke aan deze baan: de applicaties die wij draaiende houden voor onze klanten worden binnen hetzelfde gebouw ook gebouwd!</description>
+    </item>
+    
   </channel>
 </rss>
