@@ -2,49 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>aristosvo.github.io</title>
-    <link>https://aristosvo.github.io/</link>
+    <link>http://aristosvo.github.io/</link>
     <description>Recent content on aristosvo.github.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Apr 2020 14:06:17 +0200</lastBuildDate>
     
-	<atom:link href="https://aristosvo.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://aristosvo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>https://aristosvo.github.io/about/</link>
+      <link>http://aristosvo.github.io/about/</link>
       <pubDate>Sun, 05 Apr 2020 14:06:17 +0200</pubDate>
       
-      <guid>https://aristosvo.github.io/about/</guid>
-      <description>Hi! This is my blog, thanks for visiting and even reading the About section.</description>
+      <guid>http://aristosvo.github.io/about/</guid>
+      <description>It is a well known fact that everybody has somebody to share.
+This is my blog: let&amp;rsquo;s try to share some stuff!</description>
     </item>
     
     <item>
       <title>Authenticating Spring Boot apps on AKS with MSI</title>
-      <link>https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/</link>
+      <link>http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</link>
       <pubDate>Sun, 05 Apr 2020 14:06:17 +0200</pubDate>
       
-      <guid>https://aristosvo.github.io/posts/aks-with-msi-for-your-java-services/</guid>
-      <description>Terraform: This issue is filed to add the last essential parts in the Azure TerraForm provider and is currently under review, after the merge I&amp;rsquo;ll probably do an extra edition with TerraForm.  Last week I was looking into solutions how to authenticate a few pods on Azure Kubernetes Service to other Azure services. These pods contain applications build with Spring Boot and my first idea was to only connect to Azure KeyVault.</description>
-    </item>
-    
-    <item>
-      <title>Werken bij VX Company: Cloud Platform Engineer [Dutch]</title>
-      <link>https://aristosvo.github.io/posts/impressie-vx-company/</link>
-      <pubDate>Tue, 24 Mar 2020 14:06:17 +0200</pubDate>
-      
-      <guid>https://aristosvo.github.io/posts/impressie-vx-company/</guid>
-      <description>Herpost: Werken bij VX Company: Cloud Platform Engineer  Ruim 4 maanden geleden ben ik begonnen als Cloud Platform Engineer bij VX Company. In een splinternieuw team, met een splinternieuwe naam: Mission Control. Als team zijn wij verantwoordelijk voor een groep klanten, die hun applicatie in productie net zo soepel willen laten draaien als hij draait in onze ontwikkelstraat. Want dat is het leuke aan deze baan: de applicaties die wij draaiende houden voor onze klanten worden binnen hetzelfde gebouw ook gebouwd!</description>
-    </item>
-    
-    <item>
-      <title>Azure Context Switching from the Commandline</title>
-      <link>https://aristosvo.github.io/posts/azure-from-the-commandline/</link>
-      <pubDate>Tue, 10 Dec 2019 21:36:16 +0100</pubDate>
-      
-      <guid>https://aristosvo.github.io/posts/azure-from-the-commandline/</guid>
-      <description>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</description>
+      <guid>http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</guid>
+      <description>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
+Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</description>
     </item>
     
   </channel>

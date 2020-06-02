@@ -18,20 +18,20 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
 <meta property="og:description" content="Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
 Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/" />
+<meta property="og:url" content="http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/" />
 <meta property="article:published_time" content="2020-04-05T14:06:17+02:00" />
 <meta property="article:modified_time" content="2020-04-05T14:06:17+02:00" />
 
 
     
-      <base href="https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/">
+      <base href="http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/">
     
     <title>
   Authenticating Spring Boot apps on AKS with MSI · aristosvo.github.io
 </title>
 
     
-      <link rel="canonical" href="https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/">
+      <link rel="canonical" href="http://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
@@ -41,7 +41,7 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
     
       
       
-      <link rel="stylesheet" href="https://aristosvo.github.io/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css" integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="http://aristosvo.github.io/css/coder.min.a4f332213a21ce8eb521670c614470c58923aaaf385e2a73982c31dd7642decb.css" integrity="sha256-pPMyITohzo61IWcMYURwxYkjqq84XipzmCwx3XZC3ss=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -49,17 +49,17 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
     
 
     
-      <link rel="stylesheet" href="https://aristosvo.github.io/css/custom.css" />
+      <link rel="stylesheet" href="http://aristosvo.github.io/css/custom.css" />
     
 
     
 
     
 
-    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="http://aristosvo.github.io/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://aristosvo.github.io/img/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.68.3" />
+    <meta name="generator" content="Hugo 0.72.0" />
   </head>
 
   
@@ -68,7 +68,7 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="https://aristosvo.github.io/">
+    <a class="navigation-title" href="http://aristosvo.github.io/">
       aristosvo.github.io
     </a>
     
@@ -78,11 +78,11 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://aristosvo.github.io/posts/">Blog</a>
+            <a class="navigation-link" href="http://aristosvo.github.io/posts/">Blog</a>
           </li>
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://aristosvo.github.io/about/">About</a>
+            <a class="navigation-link" href="http://aristosvo.github.io/about/">About</a>
           </li>
         
       
@@ -155,10 +155,10 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
 <li><a href="https://linuxize.com/post/how-to-install-apache-maven-on-ubuntu-18-04/">Maven</a></li>
 <li><a href="https://github.com/Azure/acr-docker-credential-helper#installation">docker-credential-acr-linux</a></li>
 </ul>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># install az cli latest version</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># Install az cli latest version</span>
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-<span style="font-style:italic"># install azul JDK and mvn 3.6.x</span>
+<span style="font-style:italic"># Install azul JDK and mvn 3.6.x</span>
 sudo apt-get install zulu-11 -y
 sudo apt install maven -y
 mvn -version
@@ -311,7 +311,7 @@ kubectl log -l app=spring-boot-demo | grep <span style="font-style:italic">&#34;
             return;
         }
         var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "aristosvo-github-io" + '.disqus.com/embed.js';
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
