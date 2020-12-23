@@ -59,7 +59,7 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
     <link rel="icon" type="image/png" href="http://aristosvo.github.io/img/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="http://aristosvo.github.io/img/favicon-16x16.png" sizes="16x16">
 
-    <meta name="generator" content="Hugo 0.72.0" />
+    <meta name="generator" content="Hugo 0.76.5" />
   </head>
 
   
@@ -172,7 +172,7 @@ curl -L https://aka.ms/acr/installaad/bash | /bin/bash
 export CLUSTERNAME=testmsi
 export RESOURCE_GROUP=aks-rg
 export SUBS=&lt;your subscription id&gt;
-az resource create -n $RESOURCE_GROUP
+az group create -n $RESOURCE_GROUP -l <span style="font-style:italic">&#34;West Europe&#34;</span>
 az aks create -g $RESOURCE_GROUP -n $CLUSTERNAME --enable-managed-identity
 </code></pre></div><h2 id="step-2-key-vault">Step 2: Key Vault</h2>
 <p>In the meanwhile, waiting for the cluster is not necessary. Let&rsquo;s open up another shell and start creating the other components necessary for this experiment:</p>
@@ -191,14 +191,14 @@ az acr create -n $CLUSTERNAME -g $RESOURCE_GROUP --sku Basic
 
 </code></pre></div><h2 id="step-4-storage">Step 4: Storage</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># create Blob Storage in an Azure Storage Account</span>
-az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
-az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> --auth-mode login
+az storage account create -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa1&#34;</span> -g $RESOURCE_GROUP --sku Standard_LRS
+az storage container create -n <span style="font-style:italic">&#34;blobs&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa1&#34;</span> --auth-mode login
 cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; blobs.txt
 </span><span style="font-style:italic">This is your test file
 </span><span style="font-style:italic">EOT</span>
-az storage blob upload -f ./blobs.txt -c <span style="font-style:italic">&#34;blobs&#34;</span> -n <span style="font-style:italic">&#34;blobs.txt&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span>
+az storage blob upload -f ./blobs.txt -c <span style="font-style:italic">&#34;blobs&#34;</span> -n <span style="font-style:italic">&#34;blobs.txt&#34;</span> --account-name <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa1&#34;</span> 
 
-export STORAGE_URI=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;primaryEndpoints.blob&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+export STORAGE_URI=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa1&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;primaryEndpoints.blob&#39;</span> -o tsv<span style="font-weight:bold">)</span>
 </code></pre></div><h2 id="step-5-connect-aks-to-your-container-registry">Step 5: Connect AKS to your container registry</h2>
 <p>Wow, that was a lot to take in already. Let&rsquo;s check first if AKS is already there. If not, take a small break and drink some water. Stay hydrated!)</p>
 <p>If AKS is provisioned for you, we want to connect your Azure Container Registry to your AKS instance:</p>
@@ -207,6 +207,8 @@ export STORAGE_URI=<span style="font-weight:bold">$(</span>az storage account sh
 <p>The pod will use an user-assiged Managed Identity. This identity is not bound to a service, but is visible within your resource group.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># make an identity for our pods</span>
 export POD_IDENTITY_NAME=demo-aad1
+export NODE_RESOURCE_GROUP=<span style="font-weight:bold">$(</span>az aks show -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --query nodeResourceGroup -otsv<span style="font-weight:bold">)</span>
 export PRINCIPAL_ID=<span style="font-weight:bold">$(</span>az identity create -n $POD_IDENTITY_NAME <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  -g $NODE_RESOURCE_GROUP --query <span style="font-style:italic">&#39;principalId&#39;</span> -o tsv<span style="font-weight:bold">)</span>
 </code></pre></div><p>Our identity to use by the pod is created, but what about it&rsquo;s permissions? And how to connect it to the actual pod?
@@ -214,10 +216,10 @@ We add permissions to access the Key Vault and to read our blob storage:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># allow access to the key vault secrets for our pod identity</span>
 az role assignment create --role Reader --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --scope /subscriptions/$SUBS/resourcegroups/$NODE_RESOURCE_GROUP
-az keyvault set-policy -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="font-weight:bold;font-style:italic">\ </span>
-  --object-id $PRINCIPAL_ID --secret-permissions get list
+az keyvault set-policy -n $CLUSTERNAME -g $RESOURCE_GROUP <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>  --object-id $PRINCIPAL_ID --secret-permissions get list
 
-export STORAGE_ID=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;id&#39;</span> -o tsv<span style="font-weight:bold">)</span>
+export STORAGE_ID=<span style="font-weight:bold">$(</span>az storage account show -n <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>CLUSTERNAME<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">sa1&#34;</span> -g $RESOURCE_GROUP --query <span style="font-style:italic">&#39;id&#39;</span> -o tsv<span style="font-weight:bold">)</span>
 
 az role assignment create --role <span style="font-style:italic">&#34;Storage Blob Data Reader&#34;</span> --assignee $PRINCIPAL_ID <span style="font-weight:bold;font-style:italic">\
 </span><span style="font-weight:bold;font-style:italic"></span>  --scope $STORAGE_ID
@@ -269,7 +271,7 @@ cat <span style="font-style:italic">&lt;&lt;EOT &gt;&gt; azureidentitybinding.ym
 </span><span style="font-style:italic">EOT</span>
 kubectl apply -f azureidentitybinding.yml
 </code></pre></div><h2 id="step-10-create-an-application-and-build-it-push-a-container-to-your-registry">Step 10: Create an application and build it, push a container to your registry</h2>
-<p>We&rsquo;ve done a lot already, but we still lack an application which reads the secrets from the Azure Key Vault. Therefore, we use an application which only reads the secret and writes it to the logs. <strong>Don&rsquo;t do that in production:)</strong>&rsquo;</p>
+<p>We&rsquo;ve done a lot already, but we still lack an application which reads the secrets from the Azure Key Vault. Therefore, we use an application which only reads the secret and writes it to the logs. <strong>Don&rsquo;t do that in production:)</strong>'</p>
 <p>The Spring Boot application to use can be found <a href="https://github.com/aristosvo/azure-keyvault-secrets-spring-boot">here</a>. When we build this application, Jib takes care of pushing an image to your container registry directly. So, let&rsquo;s do it!</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="font-style:italic"># clone the application</span>
 git clone https://github.com/aristosvo/azure-keyvault-secrets-spring-boot.git
