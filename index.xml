@@ -6,7 +6,16 @@
     <description>Recent content on aristosvo.github.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Apr 2020 14:06:17 +0200</lastBuildDate><atom:link href="https://aristosvo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 24 May 2020 00:13:17 +0100</lastBuildDate><atom:link href="https://aristosvo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Werken bij VX Company: Cloud Platform Engineer [Dutch]</title>
+      <link>https://aristosvo.github.io/posts/werken-bij-vx-company-als-cloud-platform-engineer/</link>
+      <pubDate>Sun, 24 May 2020 00:13:17 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/werken-bij-vx-company-als-cloud-platform-engineer/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>About</title>
       <link>https://aristosvo.github.io/about/</link>
@@ -25,6 +34,24 @@ This is my blog: let&amp;rsquo;s try to share some stuff!</description>
       <guid>https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</guid>
       <description>Last week I was looking for the best solution to connect to Azure services for a few pods within Azure Kubernetes Service. These services are build with Spring Boot and my first idea was to only connect to Azure KeyVault. Along the way I discovered the awesomeness of Managed Service Identities and extended it to another Azure Service, Azure Storage.
 Managed Service Identities: a short intro To explain a bit about Managed Service Identities I prefer to point towards the Azure docs:</description>
+    </item>
+    
+    <item>
+      <title>Azure From the Commandline</title>
+      <link>https://aristosvo.github.io/posts/azure-from-the-commandline/</link>
+      <pubDate>Tue, 10 Dec 2019 21:36:16 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/azure-from-the-commandline/</guid>
+      <description>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</description>
+    </item>
+    
+    <item>
+      <title>My First Post</title>
+      <link>https://aristosvo.github.io/posts/my-first-post/</link>
+      <pubDate>Tue, 10 Dec 2019 21:19:31 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/my-first-post/</guid>
+      <description>While I&amp;rsquo;ve been thinking a lot about writing my thoughts down a lot over the years, it never really happened. And although it is now happening, I&amp;rsquo;m still looking which direction to take. My first blog posts will probably focus on my journey, discoveries, tips and tricks from my job experiences and a lot of other stuff you&amp;rsquo;re probably not interested in. However, if you are and want me to know that, don&amp;rsquo;t hesitate.</description>
     </item>
     
   </channel>

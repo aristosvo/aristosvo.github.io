@@ -3,12 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://aristosvo.github.io/about/</loc>
-    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+    <loc>https://aristosvo.github.io/</loc>
+    <lastmod>2020-05-24T00:13:17+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://aristosvo.github.io/</loc>
+    <loc>https://aristosvo.github.io/posts/</loc>
+    <lastmod>2020-05-24T00:13:17+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://aristosvo.github.io/posts/werken-bij-vx-company-als-cloud-platform-engineer/</loc>
+    <lastmod>2020-05-24T00:13:17+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://aristosvo.github.io/about/</loc>
     <lastmod>2020-04-05T14:06:17+02:00</lastmod>
   </url>
   
@@ -18,8 +28,13 @@
   </url>
   
   <url>
-    <loc>https://aristosvo.github.io/posts/</loc>
-    <lastmod>2020-04-05T14:06:17+02:00</lastmod>
+    <loc>https://aristosvo.github.io/posts/azure-from-the-commandline/</loc>
+    <lastmod>2019-12-10T21:36:16+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://aristosvo.github.io/posts/my-first-post/</loc>
+    <lastmod>2019-12-10T21:19:31+01:00</lastmod>
   </url>
   
   <url>

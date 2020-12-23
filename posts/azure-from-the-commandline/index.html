@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="en">
+
+    <meta name="author" content="Aris van Ommeren">
+    <meta name="description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Azure From the Commandline"/>
+<meta name="twitter:description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner."/>
+
+    <meta property="og:title" content="Azure From the Commandline" />
+<meta property="og:description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://aristosvo.github.io/posts/azure-from-the-commandline/" />
+<meta property="article:published_time" content="2019-12-10T21:36:16+01:00" />
+<meta property="article:modified_time" content="2019-12-10T21:36:16+01:00" />
+
+
+    <title>
+  Azure From the Commandline · aristosvo.github.io
+</title>
+
+    
+      <link rel="canonical" href="https://aristosvo.github.io/posts/azure-from-the-commandline/">
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css"
+      integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8/normalize.min.css">
+    
+      
+      
+      <link rel="stylesheet" href="https://aristosvo.github.io/css/coder.min.f01c647a0d25b40da992a37c3376291185eed8a50ced8c26cc2c0bcfe38c97df.css" integrity="sha256-8Bxkeg0ltA2pkqN8M3YpEYXu2KUM7YwmzCwLz&#43;OMl98=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://aristosvo.github.io/img/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="https://aristosvo.github.io/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://aristosvo.github.io/images/apple-touch-icon.png">
+
+    
+
+    <meta name="generator" content="Hugo 0.79.1" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light"
+        onload=""
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://aristosvo.github.io/">
+      aristosvo.github.io
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://aristosvo.github.io/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://aristosvo.github.io/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Azure From the Commandline</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2019-12-10T21:36:16&#43;01:00'>
+                December 10, 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              3-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <p>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</p>
+<h2 id="switching-subscriptions">Switching subscriptions</h2>
+<p>Because of our work for different clients, my first <code>bash</code> script I wrote was a script to switch subscriptions, <code>saz</code> or <code>switchazure</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
+</span><span style=""></span>
+unset options i
+<span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
+  options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
+<span style="font-weight:bold">done</span> &lt; &lt;(az account list -o tsv | cut -f 4,2 )
+tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
+<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop the script&#34;</span>; <span style="font-weight:bold">do</span>
+  <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
+  <span style="font-weight:bold">then</span>
+    subscriptionid=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    echo -e <span style="font-style:italic">&#34;--&gt; Set Subscription: az account set -s </span><span style="font-weight:bold;font-style:italic">${</span>subscriptionid<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">\n&#34;</span>
+    az account set -s $subscriptionid
+    
+    echo <span style="font-style:italic">&#34;--&gt; Subscription is:&#34;</span>
+    az account show -o table
+    break
+  <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
+  <span style="font-weight:bold">then</span>
+    echo <span style="font-style:italic">&#34;--&gt; Stopped the script&#34;</span>
+    break
+  <span style="font-weight:bold">else</span>
+    echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
+    break
+  <span style="font-weight:bold">fi</span>
+<span style="font-weight:bold">done</span>
+</code></pre></div><p>For the people who are like me (lazy and not born from the bash shell)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias saz=<span style="font-style:italic">&#39;~/azure-scripts/switch_azure_accounts.sh&#39;</span>
+</code></pre></div><p>To be honest, I use this every day a few times a day. In the future it will probably change a bit due to the level of automation I&rsquo;m planning to bring into the organisation, but for now it works like a charm.</p>
+<h2 id="kubernetes-switching">Kubernetes switching</h2>
+<p>A simular approach worked for me, adding Kubernetes contexts. I don&rsquo;t want to do the lookup myself;)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
+</span><span style=""></span>
+unset options i
+<span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
+  options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
+<span style="font-weight:bold">done</span> &lt; &lt;(az aks list -o tsv | cut -f 15,20 )
+tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
+<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop script&#34;</span>; <span style="font-weight:bold">do</span>
+  echo $opt
+  <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
+  <span style="font-weight:bold">then</span>
+    clustername=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    resourcegroup=<span style="font-style:italic">`</span>echo $opt | cut -f 2 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Get Credentials: az aks get-credentials -n </span><span style="font-weight:bold;font-style:italic">${</span>clustername<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> -g </span><span style="font-weight:bold;font-style:italic">${</span>resourcegroup<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+    az aks get-credentials -n $clustername -g $resourcegroup
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Contexts available are:&#34;</span>
+    kubectl ctx
+    break
+  <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
+  <span style="font-weight:bold">then</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
+    break
+  <span style="font-weight:bold">else</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
+    echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
+    break
+  <span style="font-weight:bold">fi</span>
+<span style="font-weight:bold">done</span>
+</code></pre></div><h2 id="save-the-queries">Save the queries!</h2>
+<p>Based on our usage of queries in alerts and the missing functionality in TerraForm to roll them out from there, I added a simple script to download the queries to source control.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">subscription=<span style="font-weight:bold">$(</span>az account show --query id -o tsv<span style="font-weight:bold">)</span>
+
+unset options i
+<span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
+  options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
+<span style="font-weight:bold">done</span> &lt; &lt;(az monitor log-analytics workspace list --query <span style="font-style:italic">&#39;[].{name:name, rg:resourceGroup}&#39;</span> -o tsv)
+tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
+<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop the script&#34;</span>; <span style="font-weight:bold">do</span>
+  <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
+  <span style="font-weight:bold">then</span>
+    workspace=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    resourcegroup=<span style="font-style:italic">`</span>echo $opt | cut -f 2 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    echo <span style="font-style:italic">&#34;Workspace </span><span style="font-weight:bold;font-style:italic">${</span>workspace<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> geselecteerd in </span><span style="font-weight:bold;font-style:italic">${</span>resourcegroup<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+    token=<span style="font-weight:bold">$(</span>az account get-access-token --resource https://management.azure.com --query accessToken -o tsv<span style="font-weight:bold">)</span>
+
+    array=(<span style="font-weight:bold">$(</span>curl -s --location --request GET <span style="font-style:italic">&#34;https://management.azure.com/subscriptions/</span><span style="font-weight:bold;font-style:italic">${</span>subscription<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">/resourcegroups/</span><span style="font-weight:bold;font-style:italic">${</span>resourcegroup<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">/providers/Microsoft.OperationalInsights/workspaces/</span><span style="font-weight:bold;font-style:italic">${</span>workspace<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">/savedSearches?api-version=2015-03-20&#34;</span> <span style="font-weight:bold;font-style:italic">\
+</span><span style="font-weight:bold;font-style:italic"></span>    --header <span style="font-style:italic">&#34;Authorization: Bearer </span><span style="font-weight:bold;font-style:italic">${</span>token<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> | jq -r <span style="font-style:italic">&#39;.value[] | select(.name | contains(&#34;LogManagement&#34;) | not) | select(.properties.Category | contains(&#34;AlertIbiza&#34;) | not) | .id&#39;</span><span style="font-weight:bold">)</span>)
+
+    <span style="font-weight:bold">for</span> url in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>array[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+    <span style="font-weight:bold">do</span>
+        result=<span style="font-weight:bold">$(</span>curl -s --location --request GET <span style="font-style:italic">&#34;https://management.azure.com/</span><span style="font-weight:bold;font-style:italic">${</span>url<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">?api-version=2015-03-20&#34;</span> --header <span style="font-style:italic">&#34;Authorization: Bearer </span><span style="font-weight:bold;font-style:italic">${</span>token<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span><span style="font-weight:bold">)</span>
+        category=<span style="font-weight:bold">$(</span>echo $result | jq -r <span style="font-style:italic">&#39; .properties.Category&#39;</span><span style="font-weight:bold">)</span>
+        displayName=<span style="font-weight:bold">$(</span>echo $result | jq -r <span style="font-style:italic">&#39; .properties.DisplayName&#39;</span><span style="font-weight:bold">)</span>
+        function_alias=<span style="font-weight:bold">$(</span>echo $result | jq -r <span style="font-style:italic">&#39; .properties.FunctionAlias&#39;</span><span style="font-weight:bold">)</span>
+        <span style="font-weight:bold">if</span> [ $function_alias = <span style="font-style:italic">&#34;null&#34;</span> ]
+        <span style="font-weight:bold">then</span>
+            filename=<span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>displayName<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">.kusto&#34;</span>
+        <span style="font-weight:bold">else</span>
+            filename=<span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>function_alias<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">.function.kusto&#34;</span>
+        <span style="font-weight:bold">fi</span>
+        mkdir -p $category
+        echo $result | jq -r <span style="font-style:italic">&#39;.properties.Query&#39;</span> &gt;$category/$filename
+        echo <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>filename<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is geupdated&#34;</span>
+    <span style="font-weight:bold">done</span>
+    break
+  <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
+  <span style="font-weight:bold">then</span>
+    echo <span style="font-style:italic">&#34;--&gt; Stopped the script&#34;</span>
+    break
+  <span style="font-weight:bold">else</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
+    echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
+  <span style="font-weight:bold">fi</span>
+<span style="font-weight:bold">done</span>
+</code></pre></div>
+      </div>
+
+
+      <footer>
+        
+
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+      </footer>
+    </article>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [
+          ['$', '$'], ['\\(', '\\)']
+        ],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+        <p>Knowledge as a Service</p>
+      
+      
+        ©
+        
+        2020
+         Aris van Ommeren 
+      
+      
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+        
+        <script src="https://aristosvo.github.io/js/dark-mode.min.0213e1773e6d1c5a644f847c67a6f8abac49a3776e2976f6008038af8c5b76a1.js"></script>
+      
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
