@@ -6,7 +6,17 @@
     <description>Recent content in Posts on aristosvo.github.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 May 2020 00:13:17 +0100</lastBuildDate><atom:link href="https://aristosvo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 24 Dec 2020 00:32:35 +0100</lastBuildDate><atom:link href="https://aristosvo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Contributing to the Azure Terraform provider</title>
+      <link>https://aristosvo.github.io/posts/contributing-to-the-azure-terraform-provider/</link>
+      <pubDate>Thu, 24 Dec 2020 00:32:35 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/contributing-to-the-azure-terraform-provider/</guid>
+      <description>One of the things I wanted to write about for a long time now is how to start contributing to open source. In my case it&amp;rsquo;s mostly contributing to the Azure Terraform provider. This is mostly related to my work as a Cloud Platform Engineer, but I think you could apply the lessons learned to a lot of open source communities.
+They are put in a random order, maybe some of them are not relevant in your situation.</description>
+    </item>
+    
     <item>
       <title>Werken bij VX Company: Cloud Platform Engineer [Dutch]</title>
       <link>https://aristosvo.github.io/posts/werken-bij-vx-company-als-cloud-platform-engineer/</link>
@@ -27,7 +37,16 @@ Managed Service Identities: a short intro To explain a bit about Managed Service
     </item>
     
     <item>
-      <title>Azure From the Commandline</title>
+      <title>Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig</title>
+      <link>https://aristosvo.github.io/posts/azure-from-the-commandline-2/</link>
+      <pubDate>Tue, 10 Dec 2019 21:36:16 +0100</pubDate>
+      
+      <guid>https://aristosvo.github.io/posts/azure-from-the-commandline-2/</guid>
+      <description>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</description>
+    </item>
+    
+    <item>
+      <title>Commandline tricks: Switching between Azure Subscriptions</title>
       <link>https://aristosvo.github.io/posts/azure-from-the-commandline/</link>
       <pubDate>Tue, 10 Dec 2019 21:36:16 +0100</pubDate>
       

@@ -4,12 +4,17 @@
   
   <url>
     <loc>https://aristosvo.github.io/</loc>
-    <lastmod>2020-05-24T00:13:17+01:00</lastmod>
+    <lastmod>2020-12-24T00:32:35+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://aristosvo.github.io/posts/contributing-to-the-azure-terraform-provider/</loc>
+    <lastmod>2020-12-24T00:32:35+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://aristosvo.github.io/posts/</loc>
-    <lastmod>2020-05-24T00:13:17+01:00</lastmod>
+    <lastmod>2020-12-24T00:32:35+01:00</lastmod>
   </url>
   
   <url>
@@ -28,6 +33,11 @@
   </url>
   
   <url>
+    <loc>https://aristosvo.github.io/posts/azure-from-the-commandline-2/</loc>
+    <lastmod>2019-12-10T21:36:16+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://aristosvo.github.io/posts/azure-from-the-commandline/</loc>
     <lastmod>2019-12-10T21:36:16+01:00</lastmod>
   </url>
@@ -35,6 +45,11 @@
   <url>
     <loc>https://aristosvo.github.io/posts/my-first-post/</loc>
     <lastmod>2019-12-10T21:19:31+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://aristosvo.github.io/curriculum_vitae/</loc>
+    <priority>0</priority>
   </url>
   
   <url>

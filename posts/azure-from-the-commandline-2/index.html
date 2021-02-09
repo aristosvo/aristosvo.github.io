@@ -11,23 +11,23 @@
     <meta name="keywords" content="blog,developer,personal">
 
     <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Commandline tricks: Switching between Azure Subscriptions"/>
+<meta name="twitter:title" content="Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig"/>
 <meta name="twitter:description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner."/>
 
-    <meta property="og:title" content="Commandline tricks: Switching between Azure Subscriptions" />
+    <meta property="og:title" content="Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig" />
 <meta property="og:description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://aristosvo.github.io/posts/azure-from-the-commandline/" />
+<meta property="og:url" content="https://aristosvo.github.io/posts/azure-from-the-commandline-2/" />
 <meta property="article:published_time" content="2019-12-10T21:36:16+01:00" />
 <meta property="article:modified_time" content="2019-12-10T21:36:16+01:00" />
 
 
     <title>
-  Commandline tricks: Switching between Azure Subscriptions · aristosvo.github.io
+  Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig · aristosvo.github.io
 </title>
 
     
-      <link rel="canonical" href="https://aristosvo.github.io/posts/azure-from-the-commandline/">
+      <link rel="canonical" href="https://aristosvo.github.io/posts/azure-from-the-commandline-2/">
     
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -113,7 +113,7 @@
     <article>
       <header>
         <div class="post-title">
-          <h1 class="title">Commandline tricks: Switching between Azure Subscriptions</h1>
+          <h1 class="title">Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig</h1>
         </div>
         <div class="post-meta">
           <div class="date">
@@ -137,36 +137,39 @@
       <div>
         
         <p><em>One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner.</em></p>
-<h2 id="switching-subscriptions">Switching subscriptions</h2>
-<p>Because of our work for different clients, my first <code>bash</code> script I wrote was a script to switch subscriptions, <code>saz</code> or <code>switch_azure_subscription</code>:</p>
+<p>Because of our work for different clients, my second <code>bash</code> script I wrote was a script to get a <code>kubeconfig</code> for one of the Azure Kubernetes Clusters we have to manage:</p>
+<h2 id="kubernetes-switching">Kubernetes switching</h2>
+<p>A simular approach as in <a href="https://aristosvo.github.io/posts/azure-from-the-commandline/" title="Commandline Tricks: Switching between Azure Subscriptions">Commandline Tricks: Switching between Azure Subscriptions</a> worked for me here as well, adding Kubernetes contexts. I don&rsquo;t want to do the lookup myself;)</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
 </span><span style=""></span>
 unset options i
 <span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
   options[i++]=<span style="font-style:italic">&#34;</span>$f<span style="font-style:italic">&#34;</span>
-<span style="font-weight:bold">done</span> &lt; &lt;(az account list -o tsv | cut -f 4,2 )
+<span style="font-weight:bold">done</span> &lt; &lt;(az aks list -o tsv | cut -f 15,20 )
 tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span style="font-weight:bold;font-style:italic">}</span>
-<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop the script&#34;</span>; <span style="font-weight:bold">do</span>
+<span style="font-weight:bold">select</span> opt in <span style="font-style:italic">&#34;</span><span style="font-weight:bold;font-style:italic">${</span>options[@]<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span> <span style="font-style:italic">&#34;Stop script&#34;</span>; <span style="font-weight:bold">do</span>
+  echo $opt
   <span style="font-weight:bold">if</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -le <span style="font-style:italic">&#34;</span>$tLen<span style="font-style:italic">&#34;</span> ]; 
   <span style="font-weight:bold">then</span>
-    subscriptionid=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
-    echo -e <span style="font-style:italic">&#34;--&gt; Set Subscription: az account set -s </span><span style="font-weight:bold;font-style:italic">${</span>subscriptionid<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">\n&#34;</span>
-    az account set -s $subscriptionid
-    
-    echo <span style="font-style:italic">&#34;--&gt; Subscription is:&#34;</span>
-    az account show -o table
+    clustername=<span style="font-style:italic">`</span>echo $opt | cut -f 1 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    resourcegroup=<span style="font-style:italic">`</span>echo $opt | cut -f 2 -d <span style="font-style:italic">&#34; &#34;</span><span style="font-style:italic">`</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Get Credentials: az aks get-credentials -n </span><span style="font-weight:bold;font-style:italic">${</span>clustername<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> -g </span><span style="font-weight:bold;font-style:italic">${</span>resourcegroup<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic">&#34;</span>
+    az aks get-credentials -n $clustername -g $resourcegroup
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Contexts available are:&#34;</span>
+    kubectl ctx
     break
   <span style="font-weight:bold">elif</span> [ <span style="font-style:italic">&#34;</span>$REPLY<span style="font-style:italic">&#34;</span> -eq <span style="font-style:italic">&#34;</span><span style="font-weight:bold">$((</span>$tLen+1<span style="font-weight:bold">))</span><span style="font-style:italic">&#34;</span> ];
   <span style="font-weight:bold">then</span>
-    echo <span style="font-style:italic">&#34;--&gt; Stopped the script&#34;</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
     break
   <span style="font-weight:bold">else</span>
+    echo -e <span style="font-style:italic">&#34;\n--&gt; Script stopped&#34;</span>
     echo <span style="font-style:italic">&#34;Ho ho ho. Something went wrong. </span><span style="font-weight:bold;font-style:italic">${</span>REPLY<span style="font-weight:bold;font-style:italic">}</span><span style="font-style:italic"> is no good a selector&#34;</span>
     break
   <span style="font-weight:bold">fi</span>
 <span style="font-weight:bold">done</span>
 </code></pre></div><p>For the people who are like me (lazy and not born from the bash shell): add this to your <code>~/.bashrc</code> or <code>~/.zshrc</code> after cloning my azure scripts repo:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias saz=<span style="font-style:italic">&#39;~/$GIT_REPO_CLONED_HERE/azure-scripts/switch_azure_subscription.sh&#39;</span>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias gkc=<span style="font-style:italic">&#39;~/$GIT_REPO_CLONED_HERE/azure-scripts/get_kubeconfig.sh&#39;</span>
 </code></pre></div><p>To be honest, I use this every day a few times a day. In the future it will probably change a bit due to the level of automation I&rsquo;m planning to bring into the organisation, but for now it works like a charm.</p>
 
       </div>
