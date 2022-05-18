@@ -1,79 +1,49 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>https://aristosvo.github.io/</loc>
     <lastmod>2021-01-01T19:40:39+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/definining-moments-2020-two/</loc>
     <lastmod>2021-01-01T19:40:39+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/</loc>
     <lastmod>2021-01-01T19:40:39+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/categories/2020/</loc>
     <lastmod>2021-01-01T19:22:05+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/categories/</loc>
     <lastmod>2021-01-01T19:22:05+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/definining-moments-2020-one/</loc>
     <lastmod>2021-01-01T19:22:05+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/contributing-to-the-azure-terraform-provider/</loc>
     <lastmod>2020-12-24T00:32:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/werken-bij-vx-company-als-cloud-platform-engineer/</loc>
     <lastmod>2020-05-24T00:13:17+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/about/</loc>
     <lastmod>2020-04-05T14:06:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/aks-with-msi-from-your-java-services/</loc>
     <lastmod>2020-04-05T14:06:17+02:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/azure-from-the-commandline-2/</loc>
     <lastmod>2019-12-10T21:36:16+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/azure-from-the-commandline/</loc>
     <lastmod>2019-12-10T21:36:16+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/posts/my-first-post/</loc>
     <lastmod>2019-12-10T21:19:31+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/curriculum_vitae/</loc>
     <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://aristosvo.github.io/tags/</loc>
   </url>
-  
 </urlset>

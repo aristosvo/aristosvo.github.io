@@ -17,9 +17,10 @@
     <meta property="og:title" content="Commandline tricks: Get your Azure Kubernetes Clusters kubeconfig" />
 <meta property="og:description" content="One of the subjects I wanted to touch on this blog is my journey in my new job. And with my new job a new cloud adventure started. In my previous job I was primarily focussed on IBM Cloud, AWS and a bit of Google Cloud. Although all clouds are in some way the same, there are also a lot of difficulties, hick-ups and new ideas marching around the corner." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://aristosvo.github.io/posts/azure-from-the-commandline-2/" />
+<meta property="og:url" content="https://aristosvo.github.io/posts/azure-from-the-commandline-2/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2019-12-10T21:36:16+01:00" />
 <meta property="article:modified_time" content="2019-12-10T21:36:16+01:00" />
+
 
 
     <title>
@@ -57,7 +58,7 @@
 
     
 
-    <meta name="generator" content="Hugo 0.79.1" />
+    <meta name="generator" content="Hugo 0.87.0" />
   </head>
 
   
@@ -140,7 +141,7 @@
 <p>Because of our work for different clients, my second <code>bash</code> script I wrote was a script to get a <code>kubeconfig</code> for one of the Azure Kubernetes Clusters we have to manage:</p>
 <h2 id="kubernetes-switching">Kubernetes switching</h2>
 <p>A simular approach as in <a href="https://aristosvo.github.io/posts/azure-from-the-commandline/" title="Commandline Tricks: Switching between Azure Subscriptions">Commandline Tricks: Switching between Azure Subscriptions</a> worked for me here as well, adding Kubernetes contexts. I don&rsquo;t want to do the lookup myself;)</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="">#!/usr/bin/env bash
 </span><span style=""></span>
 unset options i
 <span style="font-weight:bold">while</span> IFS= read -r -d <span style="font-style:italic">$&#39;\n&#39;</span> f; <span style="font-weight:bold">do</span>
@@ -169,7 +170,7 @@ tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span 
   <span style="font-weight:bold">fi</span>
 <span style="font-weight:bold">done</span>
 </code></pre></div><p>For the people who are like me (lazy and not born from the bash shell): add this to your <code>~/.bashrc</code> or <code>~/.zshrc</code> after cloning my azure scripts repo:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias gkc=<span style="font-style:italic">&#39;~/$GIT_REPO_CLONED_HERE/azure-scripts/get_kubeconfig.sh&#39;</span>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">alias gkc=<span style="font-style:italic">&#39;~/$GIT_REPO_CLONED_HERE/azure-scripts/get_kubeconfig.sh&#39;</span>
 </code></pre></div><p>To be honest, I use this every day a few times a day. In the future it will probably change a bit due to the level of automation I&rsquo;m planning to bring into the organisation, but for now it works like a charm.</p>
 
       </div>
@@ -234,7 +235,7 @@ tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span 
       
         ©
         
-        2021
+        2022
          Aris van Ommeren 
       
       
@@ -248,7 +249,7 @@ tLen=<span style="font-weight:bold;font-style:italic">${#</span>options[@]<span 
     
       
         
-        <script src="https://aristosvo.github.io/js/dark-mode.min.0213e1773e6d1c5a644f847c67a6f8abac49a3776e2976f6008038af8c5b76a1.js"></script>
+        <script src="https://aristosvo.github.io/js/dark-mode.min.aee9c8a464eb7b3534c7110f7c5e169e7039e2fd92710e0626d451d6725af137.js"></script>
       
     
 
